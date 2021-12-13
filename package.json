@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev":"nodemon -r esm server.js",
-    "start":"node -r esm server.js",
+    "dev": "nodemon -r esm server.js",
+    "start": "node -r esm server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,9 +19,13 @@
   },
   "homepage": "https://github.com/merunhowlader/dmc-inventory#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "joi": "^17.5.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.0-beta.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
