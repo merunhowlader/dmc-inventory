@@ -78,19 +78,43 @@ const registerController={
         let refresh_token;
         try{
             const newUser = new User(user);
-            const savedUser = await newUser.save().then((data)=>{
-                access_token= JwtService.sign({id:data.user_id,role:data.role});
-                refresh_token= JwtService.sign({id:data.user_id,role:data.role},'1y',REFRESH_SECRET);
-                
-              
-                const savedRefreshToken =  RefreshToken.create({token:refresh_token}).catch((err)=>{
-                    next(err);
-                })
-                 res.json({access_token:access_token,refresh_token});
-            }).catch(err =>{
+            const savedUser = await newUser.save().catch(err =>{
+           
                 next(err);
             });
-            console.log('we are save block',savedUser.role);
+
+            if(savedUser){
+
+                access_token= JwtService.sign({id:savedUser.user_id,role:savedUser.role});
+
+                refresh_token= JwtService.sign({id:savedUser.user_id,role:savedUser.role},'1y',REFRESH_SECRET);
+
+                console.log(' newly asign refresh token ',refresh_token);
+             const savedRefreshToken = await RefreshToken.create({token:refresh_token}).then((data)=>{
+    
+                    res.json({access_token:access_token,refresh_token});
+                  
+    
+                   
+    
+                }).catch((err)=>{
+                    next(err);
+                });
+    
+
+            }
+
+           
+          
+            // if(savedRefreshToken.token){
+            //     res.json({access_token:access_token,refresh_token});
+
+            // }
+
+            
+
+            
+            
             //JwtService.sign({id:result.id})
         //    if(savedUser){
 
@@ -106,7 +130,7 @@ const registerController={
 
 
 
-         res.json({msg:"hello for register controller"})
+        
 
     }
 

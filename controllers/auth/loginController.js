@@ -3,6 +3,8 @@ import User from './../../models/user';
 import CustomErrorHandler from './../../services/CustomErrorHandler';
 import JwtService from './../../services/JwtService';
 import bcrypt from 'bcrypt';
+import { RefreshToken } from '../../models';
+import { REFRESH_SECRET } from '../../config';
 
 const loginController ={
 
@@ -41,9 +43,23 @@ const loginController ={
                 return next(CustomErrorHandler.wrongCredentials());
 
             }
-            const access_token= JwtService.sign({id:user.user_id,role:user.role});
+            const access_token= JwtService.sign({id:user.user_id,role:user.role,department:user.department});
 
-            res.json({access_token});
+           const  refresh_token= JwtService.sign({id:user.user_id,role:user.role,department:user.department},'1y',REFRESH_SECRET);
+
+            console.log(' newly asign refresh token ',refresh_token);
+            const savedRefreshToken = await RefreshToken.create({token:refresh_token}).then((data)=>{
+
+                res.json({access_token:access_token,refresh_token});
+              
+
+               
+
+            }).catch((err)=>{
+                next(err);
+            });
+
+            //res.json({access_token});
 
             //compare the password
           
@@ -52,6 +68,40 @@ const loginController ={
             return next(error);
 
         }
+
+    },
+
+    async logout(req,res, next){
+        const refreshSchema=Joi.object({
+            refresh_token:Joi.string().required(),
+           
+            
+    
+        })
+    
+        const {error} =refreshSchema.validate(req.body);
+    
+       
+    
+        if(error) {
+            return next(error);
+        }
+
+        try {
+
+            await RefreshToken.destroy({
+                where: {
+
+                    token:req.body.refresh_token
+                    // criteria
+                }
+            })
+
+        }catch(error) {
+            return next(new Error(' something went  wrong in the database'));
+        }
+
+        res.json({status: 'success'});
 
     }
 

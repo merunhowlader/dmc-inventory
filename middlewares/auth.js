@@ -14,12 +14,17 @@ const  auth = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const {id,role} = JwtService.verify(token);
+        const mk = JwtService.verify(token);
+        console.log(mk);
+
+        const {id,role,department} = JwtService.verify(token);
 
         req.user={};
 
         req.user.id=id;
         req.user.role=role;
+        req.user.department=department;
+
         next();
 
     }catch(err){

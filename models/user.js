@@ -1,6 +1,3 @@
-
-
-
 import {DataTypes} from 'Sequelize';
 
 import sequelize from '../database';
