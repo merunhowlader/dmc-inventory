@@ -1,9 +1,12 @@
 import Joi from 'joi';
 
-import { User } from '../../models';
+import { RefreshToken, User } from '../../models';
 import CustomErrorHandler from '../../services/CustomErrorHandler';
 
 import bcrypt  from 'bcrypt';
+
+import JwtService from '../../services/JwtService';
+import { REFRESH_SECRET } from '../../config';
 
 const registerController={
   async  register(req, res, next){
@@ -16,7 +19,7 @@ const registerController={
             conform_password:Joi.ref('password'),
             phone:Joi.string().min(10).max(14).required(),
             department:Joi.string().required(),
-            roll:Joi.string().optional(),
+            role:Joi.string().optional(),
             status:Joi.boolean().optional(),
 
         })
@@ -53,29 +56,48 @@ const registerController={
         }
         console.log('test 2');
 
-        const hashedPassword = await bcrypt.hash(req.body.password,10);
+        const hashedPassword = await bcrypt.hash(req.body.password,10).catch((err)=>{
+            next(err);
+        });
 
-        const {username,email,phone,department,password,roll} = req.body;
+        const {username,email,phone,department,password,role} = req.body;
         const user ={
             username,
             email,
             password:hashedPassword,
             phone,
             department,
-            roll,
+            role,
            
 
 
         }
        
         console.log('we are before save block',user);
+        let access_token;
+        let refresh_token;
         try{
             const newUser = new User(user);
-            const savedUser = await newUser.save().catch(err =>{
+            const savedUser = await newUser.save().then((data)=>{
+                access_token= JwtService.sign({id:data.user_id,role:data.role});
+                refresh_token= JwtService.sign({id:data.user_id,role:data.role},'1y',REFRESH_SECRET);
+                
+              
+                const savedRefreshToken =  RefreshToken.create({token:refresh_token}).catch((err)=>{
+                    next(err);
+                })
+                 res.json({access_token:access_token,refresh_token});
+            }).catch(err =>{
                 next(err);
             });
-            console.log('we are save block');
-           if(savedUser) res.json({message:'thanks for registration'});
+            console.log('we are save block',savedUser.role);
+            //JwtService.sign({id:result.id})
+        //    if(savedUser){
+
+        //     access_token= JwtService.sign({id:savedUser.user_id,role:savedUser.role})
+        //     res.json({access_token:access_token});
+
+        //    }
 
         }catch(err){
             next(err);
@@ -84,7 +106,7 @@ const registerController={
 
 
 
-        // res.json({msg:"hello for register controller"})
+         res.json({msg:"hello for register controller"})
 
     }
 

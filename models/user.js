@@ -14,11 +14,18 @@ const User = sequelize.define('user',{
     },
     username: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate:{
+            len:[4,40]
+        }
     },
     email: {
         type:DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
+        validate:{
+            isEmail: true
+        }
     },
     phone: {
         type:DataTypes.STRING,
@@ -28,7 +35,7 @@ const User = sequelize.define('user',{
         type:DataTypes.STRING,
         allowNull: false
     },
-    roll: {
+    role: {
         type:DataTypes.INTEGER
     },
     password: {
