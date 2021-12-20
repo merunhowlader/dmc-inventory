@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import User from './../../models/user';
+import {User} from './../../models';
 import CustomErrorHandler from './../../services/CustomErrorHandler';
 import JwtService from './../../services/JwtService';
 import bcrypt from 'bcrypt';

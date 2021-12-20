@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import {registerController,loginController,userController,refreshController} from '../controllers';
 import auth from '../middlewares/auth';
-import ictRouter from './ictRoute';
+import productRoute from './productRoute';
 
 router.post('/register',registerController.register);
 
@@ -14,7 +14,7 @@ router.post('/refresh',refreshController.refresh);
 router.post('/logout',auth,loginController.logout);
 
 
-router.use('/ict/',auth,ictRouter)
+router.use('/product/',productRoute);
 
 export default router;
 

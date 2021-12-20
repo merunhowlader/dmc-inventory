@@ -1,11 +1,6 @@
 
 
-
-import {DataTypes} from 'Sequelize';
-
-import sequelize from '../database';
-
-
+module.exports = (sequelize, DataTypes) => {
 const RefreshToken = sequelize.define('refreshToken',{
     token:{
        type:DataTypes.STRING,
@@ -18,6 +13,5 @@ const RefreshToken = sequelize.define('refreshToken',{
 
 
 
-
-
-export default RefreshToken;
+return RefreshToken;
+};

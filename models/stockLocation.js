@@ -1,10 +1,4 @@
-
-
-
-import {DataTypes} from 'Sequelize';
-
-import sequelize from '../database';
-
+module.exports = (sequelize, DataTypes) => {
 
 const StockLocation = sequelize.define('StockLocation',{
     stock_id:{
@@ -40,7 +34,10 @@ const StockLocation = sequelize.define('StockLocation',{
    });
 
 
+   
+   return StockLocation;
+};
+
   
 
 
-export default StockLocation;

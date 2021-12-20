@@ -1,11 +1,8 @@
 
-
-import {DataTypes} from 'Sequelize';
-
-import sequelize from '../database';
+module.exports = (sequelize, DataTypes) => {
 
 
-const Product = sequelize.define('user',{
+const Product = sequelize.define('product',{
     product_id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
@@ -37,19 +34,8 @@ const Product = sequelize.define('user',{
     },{
         timestamps:true,
     });
- 
-//    (async () => {
-//     try{
-//         await  User.sync({alter:true });
-//         console.log('table  has been updated or created')
 
-//     } catch(err){
-//      console.log('db connection error')
-//     }
-// })
-  
-
-
-   export default Product;
+return Product;
+};
 
 

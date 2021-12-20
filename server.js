@@ -3,12 +3,18 @@ import { APP_PORT } from "./config";
 import errorHandler from './middlewares/errorHandler';
 
 import routes from "./routes";
+const db = require("./models");
 
 
 
 const app = express();
 
 app.use(express.json());
+
+
+db.sequelize.sync({ alter: true }).then(() => {
+    console.log("Drop and re-sync db.");
+  });
 
 
 

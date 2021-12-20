@@ -1,8 +1,4 @@
-import {DataTypes} from 'Sequelize';
-
-import sequelize from '../database';
-
-
+module.exports = (sequelize, DataTypes) => {
 const User = sequelize.define('user',{
     user_id:{
        type:DataTypes.INTEGER,
@@ -46,16 +42,6 @@ const User = sequelize.define('user',{
    });
 
 
-//    (async () => {
-//     try{
-//         await  User.sync({alter:true });
-//         console.log('table  has been updated or created')
+   return User;
+};
 
-//     } catch(err){
-//      console.log('db connection error')
-//     }
-// })
-  
-
-
-   export default User;
