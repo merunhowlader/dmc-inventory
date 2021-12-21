@@ -85,9 +85,9 @@ const registerController={
 
             if(savedUser){
 
-                access_token= JwtService.sign({id:savedUser.user_id,role:savedUser.role});
+                access_token= JwtService.sign({id:user.user_id,role:user.role,department:user.department});
 
-                refresh_token= JwtService.sign({id:savedUser.user_id,role:savedUser.role},'1y',REFRESH_SECRET);
+                refresh_token= JwtService.sign({id:user.user_id,role:user.role,department:user.department},'1y',REFRESH_SECRET);
 
                 console.log(' newly asign refresh token ',refresh_token);
              const savedRefreshToken = await RefreshToken.create({token:refresh_token}).then((data)=>{

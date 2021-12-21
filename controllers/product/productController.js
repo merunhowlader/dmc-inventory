@@ -8,6 +8,7 @@ const productController ={
         name: Joi.string().required(),
         type:Joi.string().required(),
         rental:Joi.string().required(),
+        notice:Joi.number().required(),
         
 
     })
@@ -22,7 +23,7 @@ const productController ={
     }
 
 
-    console.log('hi form product controller');
+    console.log('hi form product controller',req.user.user_id);
 
     try{
 
@@ -34,7 +35,7 @@ const productController ={
 
         console.log('exist',exist);
          if(exist){
-             return next(CustomErrorHandler.alreadyExist('this email is already taken'));
+             return next(CustomErrorHandler.alreadyExist('product alrady exist'));
          }
 
 
@@ -43,9 +44,11 @@ const productController ={
         let product ={
             name:req.body.name,
             type:req.body.type,
-            rental:req.body.rental,
             department:req.user.department,
-            created_by:req.user.user_id
+            rental:req.body.rental,
+            notice:req.body.notice,
+           
+            created_by:req.user.id
 
         }
          try{
@@ -55,7 +58,7 @@ const productController ={
 
              const newProduct = await Product.create(product).then((data)=>{
                 stockLocation= data.createStockLocation({
-                    [req.user.department]:req.user.department,
+                    [req.user.department]:0,
                     }).catch((err)=>{
                         next(err);
                     })

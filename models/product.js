@@ -26,6 +26,10 @@ const Product = sequelize.define('product',{
          type:DataTypes.BOOLEAN,
          allowNull: false
      },
+     notice: {
+        type:DataTypes.INTEGER,
+        allowNull: false
+    },
      created_by: {
          type: DataTypes.STRING
      },
