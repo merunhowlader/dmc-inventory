@@ -12,9 +12,24 @@ module.exports = (sequelize, DataTypes) => {
              type: DataTypes.STRING,
              allowNull: false,
             
-         }
+         },
          
-        
+         product_name: {
+             type: DataTypes.STRING,
+             
+            
+         },
+         product_quantity: {
+             type: DataTypes.STRING,
+            
+            
+         },
+         product_demand: {
+             type: DataTypes.DECIMAL ,
+             
+            
+         }
+          
         },{
             timestamps:true,
         });

@@ -39,7 +39,7 @@ const refreshController={
 
             console.log('refresh token try block: ' + refreshtoken.token);
 
-            const {id} =  await JwtService.verify(refreshtoken.token,REFRESH_SECRET);
+            const {id} =  JwtService.verify(refreshtoken.token,REFRESH_SECRET);
             userId=id;
 
             console.log(' varify user: ' + id);
@@ -50,7 +50,9 @@ const refreshController={
             return next(CustomErrorHandler.unAuthorized('invalid refresh token 2'));
         }
 
-        const user = await User.findOne({where:{user_id:userId}});
+        const user = await User.findOne({where:{user_id:userId}}).catch(err => {
+            next(err);
+        });
 
         if(!user){
             return next(CustomErrorHandler.unAuthorized('no user found'));

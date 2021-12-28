@@ -20,10 +20,18 @@ module.exports = (sequelize, DataTypes) => {
          },
          date: {
              type:DataTypes.STRING,
-             allowNull: false
+             allowNull: true
          },
          status: {
              type:DataTypes.BOOLEAN,
+             allowNull: true
+         },
+         serial: {
+             type:DataTypes.STRING,
+             allowNull: true
+         },
+         userId: {
+             type:DataTypes.STRING,
              allowNull: false
          }
          
