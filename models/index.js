@@ -26,7 +26,13 @@ db.User = require("./user.js")(sequelize, Sequelize);
 db.Product = require("./product.js")(sequelize, Sequelize);
 db.StockLocation = require("./stockLocation.js")(sequelize, Sequelize);
 
-db.Product.hasMany(db.StockLocation,{onDelete:'CASCADE'});
+db.Transaction = require("./transaction.js")(sequelize,Sequelize);
+db.TransactionItem = require("./transactionItem.js")(sequelize, Sequelize);
+
+db.Transaction.hasMany(db.TransactionItem,{onDelete:'CASCADE'});
+db.TransactionItem.belongsTo(db.Transaction,{onDelete:'CASCADE'});
+
+db.Product.hasOne(db.StockLocation,{onDelete:'CASCADE'});
 db.StockLocation.belongsTo(db.Product,{onDelete:'CASCADE'});
 
 module.exports = db;
