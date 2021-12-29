@@ -1,31 +1,31 @@
 module.exports = (sequelize, DataTypes) => {
 
 const StockLocation = sequelize.define('StockLocation',{
-    stock_id:{
+    id:{
        type:DataTypes.INTEGER,
        primaryKey:true,
        autoIncrement:true,
     },
     ict: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DECIMAL(10,2),
         
        
     },
     medicine: {
-        type:DataTypes.INTEGER,
+        type:DataTypes.DECIMAL(10,2),
        
        
     },
     general: {
-        type:DataTypes.INTEGER,
+        type:DataTypes.DECIMAL(10,2),
         
     },
     ward: {
-        type:DataTypes.BOOLEAN,
+        type:DataTypes.DECIMAL(10,2),
        
     },
     created_by: {
-        type: DataTypes.STRING
+        type: DataTypes.INTEGER
     },
     
    

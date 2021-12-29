@@ -17,7 +17,7 @@ const transactionController ={
 
 
     let transaction ={
-        from:req.user.department,
+        from:req.body.from,
         to:req.body.to,
         serial:req.body.serialNo,
         status:req.body.rental,
@@ -123,11 +123,34 @@ const transactionController ={
     // })
 
 
+    // for (let i=0; i<allTransactionsItems.length; i++) {
+
+    //     await StockLocation.update({
+
+    //         [req.body.from]: sequelize.literal(`${req.body.from} - ${allTransactionsItems[i].product_quantity}`),
+            
+    //         //[req.user.department]: `sequelize.literal(${req.user.department} + ${allTransactionsItems[i].product_quantity})`,
+    //         [req.body.to]:sequelize.literal(`${req.body.to} + ${allTransactionsItems[i].product_quantity}`)
+            
+    //       }, {
+    //         where: {
+    //             productProductId:allTransactionsItems[i].product_id
+    //         }
+    //       })
+
+    //     // await StockLocation.increment([req.user.department],{by:allTransactionsItems[i].product_quantity,where: { productProductId:allTransactionsItems[i].product_id}}).catch((err)=>{
+    //     //     next(err);
+    //     // })
+
+    // }
+
+    const promises = [];
+
     for (let i=0; i<allTransactionsItems.length; i++) {
 
-        await StockLocation.update({
+       promises.push( StockLocation.update({
 
-            [req.user.department]: sequelize.literal(`${req.user.department} - ${allTransactionsItems[i].product_quantity}`),
+            [req.body.from]: sequelize.literal(`${req.body.from} - ${allTransactionsItems[i].product_quantity}`),
             
             //[req.user.department]: `sequelize.literal(${req.user.department} + ${allTransactionsItems[i].product_quantity})`,
             [req.body.to]:sequelize.literal(`${req.body.to} + ${allTransactionsItems[i].product_quantity}`)
@@ -136,13 +159,17 @@ const transactionController ={
             where: {
                 productProductId:allTransactionsItems[i].product_id
             }
-          })
+          }))
 
         // await StockLocation.increment([req.user.department],{by:allTransactionsItems[i].product_quantity,where: { productProductId:allTransactionsItems[i].product_id}}).catch((err)=>{
         //     next(err);
         // })
 
     }
+
+    await Promise.all(promises).catch((err)=>{
+        next(err);
+    });
 
   
         
@@ -170,7 +197,9 @@ const transactionController ={
      
      
 
-   }
+    }
+
+   
 
 }
 
