@@ -15,15 +15,15 @@ const Product = sequelize.define('product',{
      },
      BaseUnitId: {
          type:DataTypes.STRING,
-         allowNull: false
+        
      },
      serialized: {
          type:DataTypes.BOOLEAN,
-         allowNull: false
+         
      },
      notice: {
         type:DataTypes.INTEGER,
-        allowNull: false
+       
     },
      created_by: {
          type: DataTypes.STRING

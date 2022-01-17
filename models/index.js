@@ -39,15 +39,23 @@ db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
 
 
 
-db.Category.hasMany(db.Product,{onDelete:'CASCADE'});
-db.Product.belongsTo(db.Category,{onDelete:'CASCADE'});
+//db.Category.hasMany(db.Product,{onDelete:'CASCADE'});
+//db.Product.belongsTo(db.Category,{onDelete:'CASCADE'});
 
 
-db.Product.hasOne(db.ProductAttribute,{onDelete:'CASCADE'});
-db.ProductAttribute.belongsTo(db.Product,{onDelete:'CASCCASCADE'});
+ db.Product.belongsTo(db.ProductAttribute,{foreignKey: 'Attribute_id',  constraints: false});
 
-db.ProductAttribute.hasOne(db.Units,{onDelete:'CASCADE'});
-db.Units.hasMany(db.ProductAttribute,{onDelete:'CASCCASCADE'});
+// db.ProductAttribute.belongsTo(db.Product,{onDelete:'CASCCASCADE'});
+
+//db.ProductAttribute.hasOne(db.Units,{through: unitsID});
+
+//db.Product.belongsToMany(db.Units, { as: 'product_data', through: db.ProductAttribute, foreignKey: 'unit_id'});
+
+
+ db.ProductAttribute.belongsTo(db.Units, { foreignKey: 'unit_id',  constraints: false });
+ db.ProductAttribute.belongsTo(db.Category, { foreignKey: 'category_id',  constraints: false });
+ //db.Units.hasMany(db.ProductAttribute,{constraints: false});
+//db.Units.belongsToMany(db.ProductAttribute);
 
 
 db.Location.hasMany(db.Inventory,{onDelete:'CASCADE'});
