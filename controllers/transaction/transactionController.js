@@ -16,6 +16,11 @@ const transactionController ={
 
      }
 
+    ,
+    async transfer(req, res, next){
+        res.json(' hello transfer')
+    }
+
    
 
 }

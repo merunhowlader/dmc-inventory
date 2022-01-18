@@ -10,6 +10,12 @@ module.exports = (sequelize, DataTypes) => {
          name: {
              type:DataTypes.STRING,
              allowNull: false
+         },
+         opetrationId: {
+             type:DataTypes.INTEGER,
+         },
+         opreationTableName: {
+             type:DataTypes.STRING,
          }
         },{
             timestamps:false,

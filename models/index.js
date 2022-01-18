@@ -23,8 +23,31 @@ db.sequelize = sequelize;
 db.User = require("./user.js")(sequelize, Sequelize);
 db.RefreshToken = require("./refreshToken.js")(sequelize, Sequelize);
 db.Product = require("./product.js")(sequelize, Sequelize);
-db.StockOpration = require("./stockOperation.js")(sequelize, Sequelize);
 
+
+db.StockOpration = require("./stockOperation.js")(sequelize, Sequelize);
+db.Sell = require("./sell.js")(sequelize, Sequelize);
+db.Transfer = require("./transfer.js")(sequelize, Sequelize);
+
+//one to many ralation ship
+db.StockOpration.hasMany(db.Sell,{
+  foreignKey:'operationID',
+  constraints: false ,
+  scope:{
+    operationTable:'sell'
+  }
+})
+
+db.StockOpration.hasMany(db.Transfer,{
+  foreignKey:'operationID',
+  constraints: false ,
+  scope:{
+    operationTable:'transfer'
+  }
+})
+
+db.StockOpration.belongsTo(db.Sell ,{foreignKey:'operationID',constraints: false});
+db.StockOpration.belongsTo(db.Transfer,{foreignKey:'operationID',constraints: false});
 
 
 
@@ -36,6 +59,8 @@ db.Category = require("./category.js")(sequelize, Sequelize);
 db.Units = require("./units.js")(sequelize, Sequelize);
 db.UnitConversion = require("./unitConversion.js")(sequelize, Sequelize);
 db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
+
+
 
 
 
