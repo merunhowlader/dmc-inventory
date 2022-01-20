@@ -19,6 +19,10 @@ const transactionController ={
     ,
     async transfer(req, res, next){
         res.json(' hello transfer')
+    },
+
+    async stockOperation(req, res, next){
+        res.json(' hello Stock Operation')
     }
 
    
