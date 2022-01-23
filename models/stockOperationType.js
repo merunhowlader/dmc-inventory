@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
              allowNull: false
          }
         },{
-            timestamps:true,
-            underscored: true,
+            timestamps:false,
+            underscored: false,
            
             
         });

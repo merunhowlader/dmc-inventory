@@ -8,40 +8,19 @@ module.exports = (sequelize, DataTypes) => {
          color: {
              type:DataTypes.STRING,
              allowNull: false,
-            
+         },
+         sku: {
+            type:DataTypes.STRING,
          }
          ,
-        //  unitsId:{
-        //     type:DataTypes.INTEGER,
-        //     // references: {
-        //     //     model: 'Units',
-                
-        //     //   },
-        //     //   onDelete: 'cascade',
-        //     //   onUpdate: 'cascade',
-              
-              
-
-        //  },
-        //  categoryId:{
-        //     type:DataTypes.INTEGER,
-        //     // references: {
-        //     //     model: 'Category',
-               
-        //     //   },
-        //     //   onDelete: 'cascade',
-        //     //   onUpdate: 'cascade',
-              
-              
-
-        //  },
-      
-         description:{
-            type:DataTypes.STRING,
-
-         }
-         
-        
+        created_by: {
+            type: DataTypes.STRING
+        },
+        notice: {
+            type:DataTypes.INTEGER,
+           
+        },
+     
         },{
             timestamps:false,
             underscored: true,

@@ -7,6 +7,6 @@ const transactionRouter = express.Router();
 
 transactionRouter.post('/out',auth,transactionController.makeOutTransaction);
 
-transactionRouter.post('/transfer',auth,transactionController.transfer);
+transactionRouter.post('/transfer',transactionController.transfer);
 
 export default transactionRouter;

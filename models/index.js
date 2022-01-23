@@ -30,24 +30,24 @@ db.Sell = require("./sell.js")(sequelize, Sequelize);
 db.Transfer = require("./transfer.js")(sequelize, Sequelize);
 
 //one to many ralation ship
-db.StockOpration.hasMany(db.Sell,{
-  foreignKey:'operationID',
-  constraints: false ,
-  scope:{
-    operationTable:'sell'
-  }
-})
+// db.StockOpration.hasMany(db.Sell,{
+//   foreignKey:'operationID',
+//   constraints: false ,
+//   scope:{
+//     operationTable:'sell'
+//   }
+// })
 
-db.StockOpration.hasMany(db.Transfer,{
-  foreignKey:'operationID',
-  constraints: false ,
-  scope:{
-    operationTable:'transfer'
-  }
-})
+// db.StockOpration.hasMany(db.Transfer,{
+//   foreignKey:'operationID',
+//   constraints: false ,
+//   scope:{
+//     operationTable:'transfer'
+//   }
+// })
 
-db.StockOpration.belongsTo(db.Sell ,{foreignKey:'operationID',constraints: false});
-db.StockOpration.belongsTo(db.Transfer,{foreignKey:'operationID',constraints: false});
+// db.StockOpration.belongsTo(db.Sell ,{foreignKey:'operationID',constraints: false});
+// db.StockOpration.belongsTo(db.Transfer,{foreignKey:'operationID',constraints: false});
 
 
 

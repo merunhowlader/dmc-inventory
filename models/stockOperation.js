@@ -2,20 +2,27 @@
 module.exports = (sequelize, DataTypes) => {
 
     const StockOpration = sequelize.define('stockOperation',{
-        UnitId:{
+        operation_Id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
             autoIncrement:true,
-         },
-         name: {
+         } ,   
+         from: {
              type:DataTypes.STRING,
              allowNull: false
          },
-         opetrationId: {
+         to: {
              type:DataTypes.INTEGER,
          },
-         opreationTableName: {
+         serial: {
              type:DataTypes.STRING,
+         },
+         createdBy:{
+            type:DataTypes.STRING,
+         }
+         ,
+         operationType:{
+            type:DataTypes.STRING,
          }
         },{
             timestamps:false,

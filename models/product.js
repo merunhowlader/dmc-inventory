@@ -10,25 +10,15 @@ const Product = sequelize.define('product',{
      },
      Name: {
          type:DataTypes.STRING,
-         allowNull: false,
-        
+         allowNull: false,    
      },
-     BaseUnitId: {
-         type:DataTypes.STRING,
-        
+     description:{
+        type:DataTypes.STRING,
      },
-     serialized: {
-         type:DataTypes.BOOLEAN,
-         
+
+     quantity: {
+        type:DataTypes.STRING,
      },
-     notice: {
-        type:DataTypes.INTEGER,
-       
-    },
-     created_by: {
-         type: DataTypes.STRING
-     },
-     
     
     },{
         timestamps:true,

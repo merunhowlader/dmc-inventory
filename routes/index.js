@@ -17,7 +17,7 @@ router.post('/logout',auth,loginController.logout);
 
 router.use('/product/',productRoute);
 
-router.use('/transaction/ict',transactionRoute);
+router.use('/stock',transactionRoute);
 
 export default router;
 
