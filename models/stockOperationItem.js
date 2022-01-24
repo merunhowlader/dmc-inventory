@@ -2,22 +2,22 @@
 module.exports = (sequelize, DataTypes) => {
 
 
-    const Stock_Operation_Item = sequelize.define('stock_Operation_Item',{
+    const StockOperationItem = sequelize.define('stockOperationItem',{
         
        
-         ProductId: {
+         productId: {
              type:DataTypes.STRING,
              allowNull: false
          },
-         Quantity:{
+         quantity:{
             type:DataTypes.INTEGER,
          }
         },{
-            timestamps:true,
-            underscored: true,
+            timestamps:false,
+           
            
             
         });
     
-    return Stock_Operation_Item;
+    return StockOperationItem;
     };

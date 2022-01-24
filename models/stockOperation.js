@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             type:DataTypes.STRING,
          }
         },{
-            timestamps:false,
+            timestamps:true,
         });
     
     return StockOpration;

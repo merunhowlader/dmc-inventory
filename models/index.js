@@ -25,6 +25,7 @@ db.RefreshToken = require("./refreshToken.js")(sequelize, Sequelize);
 db.Product = require("./product.js")(sequelize, Sequelize);
 
 
+
 db.StockOpration = require("./stockOperation.js")(sequelize, Sequelize);
 db.Sell = require("./sell.js")(sequelize, Sequelize);
 db.Transfer = require("./transfer.js")(sequelize, Sequelize);
@@ -59,14 +60,19 @@ db.Category = require("./category.js")(sequelize, Sequelize);
 db.Units = require("./units.js")(sequelize, Sequelize);
 db.UnitConversion = require("./unitConversion.js")(sequelize, Sequelize);
 db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
+db.StockOperationItem=require("./stockOperationItem")(sequelize, Sequelize);
 
-
+db.StockOperationItem.belongsTo(db.Product,{foreignKey: 'productId',  constraints: false});
 
 
 
 //db.Category.hasMany(db.Product,{onDelete:'CASCADE'});
 //db.Product.belongsTo(db.Category,{onDelete:'CASCADE'});
 
+//allTransactionsItems
+
+db.StockOpration.hasMany(db.StockOperationItem,{foreignKey:{name:'stockOperationId',allowNull:false}});
+db.StockOperationItem.belongsTo(db.StockOpration,{foreignKey:{name:'stockOperationId',allowNull:false}});
 
  db.Product.belongsTo(db.ProductAttribute,{foreignKey: 'Attribute_id',  constraints: false});
 
@@ -83,8 +89,8 @@ db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
 //db.Units.belongsToMany(db.ProductAttribute);
 
 
-db.Location.hasMany(db.Inventory,{onDelete:'CASCADE'});
-db.Inventory.belongsTo(db.Location,{onDelete:'CASCADE'});
+//db.Location.hasMany(db.Inventory,{onDelete:'CASCADE'});
+//db.Inventory.belongsTo(db.Location,{onDelete:'CASCADE'});
 
 
 
