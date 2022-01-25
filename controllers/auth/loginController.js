@@ -1,10 +1,10 @@
-// import Joi from 'joi';
-// import {User} from './../../models';
-// import CustomErrorHandler from './../../services/CustomErrorHandler';
-// import JwtService from './../../services/JwtService';
-// import bcrypt from 'bcrypt';
-// import { RefreshToken } from '../../models';
-// import { REFRESH_SECRET } from '../../config';
+import Joi from 'joi';
+import {User} from './../../models';
+import CustomErrorHandler from './../../services/CustomErrorHandler';
+import JwtService from './../../services/JwtService';
+import bcrypt from 'bcrypt';
+import { RefreshToken } from '../../models';
+import { REFRESH_SECRET } from '../../config';
 
 const loginController ={
 
