@@ -4,15 +4,16 @@ module.exports = (sequelize, DataTypes) => {
 
     const Inventory = sequelize.define('inventory',{
        
-        locationId: {
+        location_id: {
              type:DataTypes.INTEGER,
              
          },
-         productId:{
+         product_id:{
             type:DataTypes.INTEGER, 
          },
         quantity: {
-             type:DataTypes.INTEGER,
+             type:DataTypes.DECIMAL(10,2),
+             defaultValue:0
          }
     
          

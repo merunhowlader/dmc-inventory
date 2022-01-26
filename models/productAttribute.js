@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
             type:DataTypes.INTEGER,
            
         },
+        category_id:{
+            type:DataTypes.INTEGER
+        },
+        product_id:{
+            type:DataTypes.INTEGER
+        }
      
         },{
             timestamps:false,

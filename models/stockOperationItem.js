@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     const StockOperationItem = sequelize.define('stockOperationItem',{
         
        
-         productId: {
+         product_id: {
              type:DataTypes.STRING,
              allowNull: false
          },

@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 
 
     const UnitConversion = sequelize.define('Conversion',{
-        ProductId:{
+        product_id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
             autoIncrement:true,

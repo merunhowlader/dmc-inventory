@@ -3,22 +3,26 @@ module.exports = (sequelize, DataTypes) => {
 
 
 const Product = sequelize.define('product',{
-    ProductId:{
+    product_id:{
         type:DataTypes.INTEGER,
         primaryKey:true,
         autoIncrement:true,
      },
-     Name: {
+     name: {
          type:DataTypes.STRING,
          allowNull: false,    
      },
      description:{
         type:DataTypes.STRING,
      },
+     unit_id:{
+        type:DataTypes.INTEGER,
+        
+     },
 
      quantity: {
-        type:DataTypes.STRING,
-     },
+        type:DataTypes.INTEGER,
+     }
     
     },{
         timestamps:true,

@@ -37,7 +37,7 @@ const stockOperationController ={
 
             for(let i=0; i<length;i++){
                let itemData={
-                   productId:allTransactionsItems[i].productId,
+                   product_id:allTransactionsItems[i].product_id,
                    quantity:allTransactionsItems[i].amount,
                    stockOperationId:newOperation.operation_Id
               
@@ -57,30 +57,30 @@ const stockOperationController ={
 
                
 
-                    let checkFrom= await Inventory.findOne({where:{ productId: allTransactionsItems[i].productId,locationId: req.body.from}}).catch(err => {
+                    let checkFrom= await Inventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id: req.body.from}}).catch(err => {
                       
                         next(err);
                     })
                    
 
-                    let checkTo= await Inventory.findOne({where:{ productId: allTransactionsItems[i].productId,locationId: req.body.to}}).catch(err => {
+                    let checkTo= await Inventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id: req.body.to}}).catch(err => {
                         next(err);
                     })
 
                     console.log('this is check value' ,checkFrom);
 
                     if(checkFrom){
-                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity - ${allTransactionsItems[i].amount}`)},{ where: { productId: allTransactionsItems[i].productId,locationId: req.body.from} }));
+                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity - ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.from} }));
 
                     }else{
-                        promises.push( Inventory.create({ productId: allTransactionsItems[i].productId,locationId: req.body.from,quantity:allTransactionsItems[i].amount}))
+                        promises.push( Inventory.create({ product_id: allTransactionsItems[i].product_id,location_id: req.body.from,quantity:-allTransactionsItems[i].amount}))
 
                     }
                     if(checkTo){
-                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { productId: allTransactionsItems[i].productId,locationId: req.body.to} }));
+                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.to} }));
 
                     }else{
-                        promises.push( Inventory.create({ productId: allTransactionsItems[i].productId,locationId: req.body.to,quantity:allTransactionsItems[i].amount}))
+                        promises.push( Inventory.create({ product_id: allTransactionsItems[i].product_id,location_id: req.body.to,quantity:allTransactionsItems[i].amount}))
 
                     }
 
@@ -109,8 +109,10 @@ const stockOperationController ={
         try{
 
             const exist = await StockOpration.findAll({
+                raw: true,
                 include: {
                     model: StockOperationItem,
+                    raw: true,
                     include:
                             {
                                 model: Product,
