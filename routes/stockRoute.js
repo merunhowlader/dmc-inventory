@@ -9,4 +9,9 @@ stockRoute.get('/operation',stockOperationController.stockOperation);
 
 stockRoute.post('/transfer',stockOperationController.transfer);
 
+stockRoute.get('/allinventory',stockOperationController.inventory);
+
+
+
+
 export default stockRoute;

@@ -15,7 +15,7 @@ app.use(express.json());
 
 
 try {
-  db.sequelize.sync({ alter: true,force: true }).then(() => {
+  db.sequelize.sync({ alter: false,force: false }).then(() => {
     console.log("Drop and re-sync db.");
   }).catch(err =>{
     console.log(err);

@@ -30,8 +30,13 @@ db.Units = require("./units.js")(sequelize, Sequelize);
 db.UnitConversion = require("./unitConversion.js")(sequelize, Sequelize);
 db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
 db.StockOperationItem=require("./stockOperationItem")(sequelize, Sequelize);
+db.LocationType=require("./locationType")(sequelize,Sequelize);
+
+db.LocationType=require("./locationType")(sequelize,Sequelize);
 
 
+db.LocationType.hasMany(db.Location,{foreignKey: 'type',  constraints: false});
+db.Location.belongsTo(db.LocationType,{foreignKey: 'type',  constraints: false});
 
 
 db.StockOperationItem.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});
@@ -46,7 +51,7 @@ db.Product.hasOne(db.ProductAttribute,{foreignKey: 'product_id',  constraints: f
 db.ProductAttribute.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});
 
 
- db.Product.hasMany(db.Units, { foreignKey: 'unit_id',constraints: false});
+ db.Units.hasMany(db.Product, { foreignKey: 'unit_id',constraints: false});
  db.Product.belongsTo(db.Units, { foreignKey: 'unit_id',  constraints: false });
 
 db.Category.hasMany(db.ProductAttribute, { foreignKey: 'category_id',  constraints: false });

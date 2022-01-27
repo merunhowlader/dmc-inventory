@@ -1,5 +1,5 @@
 import Joi, { date } from 'joi';
-import { Product,sequelize ,StockOpration,StockOperationItem,Inventory} from '../../models';
+import { Product,Units,Location,LocationType,sequelize ,StockOpration,StockOperationItem,Inventory} from '../../models';
 import CustomErrorHandler from '../../services/CustomErrorHandler';
 const stockOperationController ={
     
@@ -112,11 +112,16 @@ const stockOperationController ={
                 raw: true,
                 include: {
                     model: StockOperationItem,
-                    raw: true,
+                    //raw: true,
                     include:
                             {
                                 model: Product,
-                                attributes:['name'],
+                                //attributes:['name'],
+                                include: {
+                                    model: Units,
+
+                                },
+                                
                                 
                                 required: false,     
                             },
@@ -126,6 +131,68 @@ const stockOperationController ={
                     
                     
                 }
+            });
+
+            if(!exist){
+                res.json("transaction not found")
+            }
+            res.json(exist);
+
+        }catch(err){
+            next(err);
+        }
+    },
+
+    async inventory(req, res, next){
+        try{
+
+            const exist = await  LocationType.findAll({
+                raw: true,
+                where: {name:'store'},
+                include: [{
+                    model: Location,
+                  
+                    raw: true,
+                    include:
+                            {
+                                model: Inventory,
+                                where: {location_id:2},
+                                include: {
+                                    model: Product,
+                                    include: {
+                                         model: Units,
+                
+                                         }
+                                    
+                                    
+                                },
+                                
+                                //attributes:['name'],
+                                
+                                
+                                required: true,     
+                            },
+                           
+                        
+                            
+                        
+                group: ['name'],
+                required: true,
+                    
+                },
+                // {
+                //     model: Product,
+                //     include: {
+                //          model: Units,
+
+                //          }
+                    
+                    
+                // }
+            
+            
+            ],
+            
             });
 
             if(!exist){

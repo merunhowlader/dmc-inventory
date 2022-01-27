@@ -2,10 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
 
 
-    const Location = sequelize.define('location',{
+    const LocationType = sequelize.define('locationType',{
        
 
-         location_id:{
+         locationType_id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
             autoIncrement:true,
@@ -14,18 +14,10 @@ module.exports = (sequelize, DataTypes) => {
          name: {
              type:DataTypes.STRING,
              allowNull: false
-         },
-         type:{
-             type:DataTypes.INTEGER,
-             allowNull: false
          }
         },{
             timestamps:false,
         });
     
-    return Location;
+    return LocationType;
     };
-
-
-    
-    
