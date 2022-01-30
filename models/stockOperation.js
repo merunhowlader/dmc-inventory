@@ -9,12 +9,28 @@ module.exports = (sequelize, DataTypes) => {
          } ,   
          from: {
              type:DataTypes.STRING,
-             allowNull: false
+            //  references: { // Required field
+            //     model: 'location',
+            //     key: 'location_id',
+            //   },
+            //   onDelete: 'cascade',
+            //   onUpdate: 'no action',
+       
+            
+             
          },
          to: {
              type:DataTypes.INTEGER,
+            //  references: { // Required field
+            //     model: 'location',
+            //     key: 'location_id',
+            //   },
+              
+            //   onDelete: 'cascade',
+            //   onUpdate: 'no action',
+           
          },
-         serial: {
+         reference:{
              type:DataTypes.STRING,
          },
          createdBy:{

@@ -31,6 +31,7 @@ db.UnitConversion = require("./unitConversion.js")(sequelize, Sequelize);
 db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
 db.StockOperationItem=require("./stockOperationItem")(sequelize, Sequelize);
 db.LocationType=require("./locationType")(sequelize,Sequelize);
+db.LoanInventory=require("./loanInventory")(sequelize,Sequelize);
 
 db.LocationType=require("./locationType")(sequelize,Sequelize);
 
@@ -43,9 +44,20 @@ db.StockOperationItem.belongsTo(db.Product,{foreignKey: 'product_id',  constrain
 
 
 
-db.StockOpration.hasMany(db.StockOperationItem,{foreignKey:{name:'stockOperationId',allowNull:false}});
-db.StockOperationItem.belongsTo(db.StockOpration,{foreignKey:{name:'stockOperationId',allowNull:false}});
+db.StockOpration.hasMany(db.StockOperationItem,{foreignKey:'stockOperationId',constraints: false});
+db.StockOperationItem.belongsTo(db.StockOpration,{foreignKey:'stockOperationId',constraints: false});
 
+ //db.Location.hasMany(db.StockOpration,{foreignKey:'from',as:'from_location',constraints: false});
+ // db.Location.hasMany(db.StockOpration,{foreignKey:'to',as:'to_location',constraints: false});
+// db.StockOpration.belongsTo(db.Location,{foreignKey:{name:'from',allowNull:false}});
+ 
+
+//  db.StockOpration.belongsTo(db.Location,{foreignKey:'location_id',as:'auron',constraints: false});
+//  db.StockOpration.belongsTo(db.Location,{foreignKey:'location_id',as:'merun',constraints: false});
+
+
+ db.StockOpration.belongsTo(db.Location, {foreignKey:'from',as: 'From',constraints: false});
+ db.StockOpration.belongsTo(db.Location, {foreignKey:'to',as: 'To',constraints: false});
 
 db.Product.hasOne(db.ProductAttribute,{foreignKey: 'product_id',  constraints: false})
 db.ProductAttribute.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});
@@ -62,6 +74,21 @@ db.Inventory.belongsTo(db.Product, { foreignKey: 'product_id',  constraints: fal
 
 db.Location.hasMany(db.Inventory, { foreignKey: 'location_id',  constraints: false });
 db.Inventory.belongsTo(db.Location, { foreignKey: 'location_id',  constraints: false });
+
+//loanInventory
+db.Product.hasMany(db.Inventory, { foreignKey: 'product_id',  constraints: false });
+db.Inventory.belongsTo(db.Product, { foreignKey: 'product_id',  constraints: false });
+
+db.Location.hasMany(db.Inventory, { foreignKey: 'location_id',  constraints: false });
+db.Inventory.belongsTo(db.Location, { foreignKey: 'location_id',  constraints: false });
+
+//
+
+db.Product.hasMany(db.LoanInventory, { foreignKey: 'product_id',  constraints: false });
+db.LoanInventory.belongsTo(db.Product, { foreignKey: 'product_id',  constraints: false });
+
+db.Location.hasMany(db.LoanInventory, { foreignKey: 'location_id_from',  constraints: false });
+db.LoanInventory.belongsTo(db.Location, { foreignKey: 'location_id_from',  constraints: false });
 
 
 module.exports = db;

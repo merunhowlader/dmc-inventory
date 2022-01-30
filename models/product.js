@@ -19,6 +19,12 @@ const Product = sequelize.define('product',{
         type:DataTypes.INTEGER,
         
      },
+     is_serializable:{
+        type:DataTypes.BOOLEAN,
+     },
+     batch:{
+        type:DataTypes.BOOLEAN,
+     },
 
      quantity: {
         type:DataTypes.INTEGER,
