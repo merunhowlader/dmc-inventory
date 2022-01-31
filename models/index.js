@@ -32,8 +32,14 @@ db.ProductAttribute = require("./productAttribute.js")(sequelize, Sequelize);
 db.StockOperationItem=require("./stockOperationItem")(sequelize, Sequelize);
 db.LocationType=require("./locationType")(sequelize,Sequelize);
 db.LoanInventory=require("./loanInventory")(sequelize,Sequelize);
-
 db.LocationType=require("./locationType")(sequelize,Sequelize);
+
+//serial batch exparation
+db.ProductBatch=require("./productBatch")(sequelize,Sequelize);
+db.ProductCountType=require("./productCountType")(sequelize,Sequelize);
+db.ProductExperation=require("./productExperation")(sequelize,Sequelize);
+db.ProductSerialised=require("./productSerialised")(sequelize,Sequelize);
+
 
 
 db.LocationType.hasMany(db.Location,{foreignKey: 'type',  constraints: false});

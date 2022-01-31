@@ -11,7 +11,7 @@ stockRoute.post('/transfer',stockOperationController.transfer);
 stockRoute.post('/loan',stockOperationController.loan);
 
 stockRoute.get('/allinventory',stockOperationController.inventory);
-
+stockRoute.post('/supply',stockOperationController.supply);
 
 
 

@@ -19,14 +19,12 @@ const Product = sequelize.define('product',{
         type:DataTypes.INTEGER,
         
      },
-     is_serializable:{
-        type:DataTypes.BOOLEAN,
-     },
-     batch:{
-        type:DataTypes.BOOLEAN,
+     count_type:{
+      type:DataTypes.BOOLEAN,
+      allowNull: false,
      },
 
-     quantity: {
+     notice_amount: {
         type:DataTypes.INTEGER,
      }
     

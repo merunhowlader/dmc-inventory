@@ -30,6 +30,7 @@ const productController ={
             description:req.body.description,
             unit_id:req.body.unit_id,
             quantity:req.body.quantity,
+            count_type:req.body.count_type,
             
            
         }
