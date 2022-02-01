@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          track_id:{
              type:DataTypes.INTEGER,
          },
-         tableName:{
+         table_name:{
              type:DataTypes.STRING,
          }
          

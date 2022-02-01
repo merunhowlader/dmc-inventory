@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { Product,ProductAttribute,Units,Category} from '../../models';
+import productExperation from '../../models/productExperation';
 import CustomErrorHandler from '../../services/CustomErrorHandler';
 const productController ={
    async store(req, res, next){
@@ -125,7 +126,49 @@ const productController ={
               next(err);
             }
         //res.json(" get all products");
+    },
+    async addProductExperations(req, res, next){
+
+        let data ={
+            date:req.body.date,
+         
+            table_name:req.body.count_type,
+            track_id:req.body.track_id,
+            
+           
+        }
+
+        
+
+        try{
+
+            //await Product.create(product);
+            const experationExist= await productExperation.findOne({where:{ track_id:req.body.track_id,table_name:req.body.count_type}});
+
+            if(!experationExist){
+                const newProductExperation = await productExperation.create(data).then((d) =>{
+                    res.json(d)
+                }).catch((err)=>{
+                 
+                    next(err);
+                });
+
+            }
+
+            res.json({"message":"experation already exist"})
+
+          }catch(err){
+              next(err);
+            }
+        
+    },
+
+    async getProductExperation(req, res, next){
+        res.json({"message":"all experation"})
     }
+
+
+
 }
 
 export default productController;

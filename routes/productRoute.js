@@ -8,6 +8,9 @@ productRouter.post('/products',auth,productController.store);
 
 productRouter.post('/add',productController.addProduct);
 
+productRouter.post('/addexperation',productController.addProductExperations);
+
+
 
 
 export default productRouter;

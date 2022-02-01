@@ -115,12 +115,19 @@ const stockOperationController ={
             const newOperation = await StockOpration.create(transaction).catch((err)=>{
                 next(err);
             });
+          
         
             if(!newOperation){
                 next(new Error(' fast transaction error'));
             }
             let allItem=[];
             let length=allTransactionsItems.length;
+            
+            let AllSerialNumber=[];
+            let AllBatch=[];
+            let AllExixtBatch=[];
+
+     
 
             for(let i=0; i<length;i++){
                let itemData={
@@ -130,10 +137,25 @@ const stockOperationController ={
               
                }
                allItem.push(itemData);
+               
+            //    console.log('item data');
+            //    if(allTransactionsItems[i].count_type===2){
+                 
+            //      //let itemBatch =allTransactionsItems[i].track_number;
+            //      let itemBatch=allTransactionsItems[i].track_number.map(o => o.batch);
+            //     AllExixtBatch.push(...itemBatch);
+            //     console.log(i,AllExixtBatch);
+            //    }
+
+             
             }
-               const allitem=await StockOperationItem.bulkCreate(allItem).catch((err)=>{
+
+
+            const allitem=await StockOperationItem.bulkCreate(allItem).catch((err)=>{
                          next(err);
                 })
+
+            
                
 
             let promises = [];
@@ -177,6 +199,9 @@ const stockOperationController ={
                     }
 
 
+
+
+
                     if(checkLoan){
                         promises.push(LoanInventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id_from: req.body.from} }));
 
@@ -185,11 +210,35 @@ const stockOperationController ={
 
                     }
 
+                    console.log('merun');
+
+
+                    if(allTransactionsItems[i].count_type===1){
+                        let trackItemsLength=allTransactionsItems[i].track_number.length;
+
+                        console.log(trackItemsLength);
+                          
+                         for (let j =0 ; j<trackItemsLength ; j++){
+                             console.log('in loop');
+                         promises.push(ProductSerialised.update({ location_id:req.body.to},{ where: { serial_number: allTransactionsItems[i].track_number[j], product_id: allTransactionsItems[i].product_id,location_id:req.body.from}}));
+                         }
+                     
+                     }
+                    //  else if(allTransactionsItems[i].count_type===2){
+                    //      let trackItemsLength=allTransactionsItems[i].track_number.length;
+                          
+                    //      for (let j =0 ; j<trackItemsLength ; j++){
+                    //          console.log('in loop',j);
+                    //      promises.push(ProductBatch.create({ batch_number:allTransactionsItems[i].track_number[j].batch, product_id: allTransactionsItems[i].product_id,location_id:req.body.to,quantity:allTransactionsItems[i].track_number[j].quantity}));
+                    //      }
+ 
+                    //  }
+
 
                     
 
                 
-           }
+                }
 
     
      
