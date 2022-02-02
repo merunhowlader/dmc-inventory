@@ -124,7 +124,7 @@ const stockOperationController ={
             let length=allTransactionsItems.length;
             
             let AllSerialNumber=[];
-            let AllBatch=[];
+            let AllBatchindex=[];
             let AllExixtBatch=[];
 
      
@@ -138,14 +138,26 @@ const stockOperationController ={
                }
                allItem.push(itemData);
                
-            //    console.log('item data');
-            //    if(allTransactionsItems[i].count_type===2){
+
+               if(allTransactionsItems[i].count_type===2){
                  
-            //      //let itemBatch =allTransactionsItems[i].track_number;
-            //      let itemBatch=allTransactionsItems[i].track_number.map(o => o.batch);
-            //     AllExixtBatch.push(...itemBatch);
-            //     console.log(i,AllExixtBatch);
-            //    }
+                 let itemBatch =allTransactionsItems[i].track_number;
+                const asyncRes = await Promise.all(itemBatch.map(async (d) => {
+                    const checkDataExist=await ProductBatch.findOne({where:{batch_number:d.batch,location_id:req.body.to}}).catch((err)=>{
+                                        next(err);
+                            })
+
+                     //console.log('await response',checkDataExist);
+                    
+                     return checkDataExist;
+
+                    }));
+                AllExixtBatch.push({index:i,array:asyncRes});
+               
+                   // AllBatchindex.push(i);
+                    
+                  
+               }
 
              
             }
@@ -181,7 +193,6 @@ const stockOperationController ={
         
                     })
 
-                    console.log('this is check value' ,checkFrom);
 
                     if(checkFrom){
                         promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity - ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.from} }));
@@ -210,26 +221,40 @@ const stockOperationController ={
 
                     }
 
-                    console.log('merun');
+       
 
 
                     if(allTransactionsItems[i].count_type===1){
                         let trackItemsLength=allTransactionsItems[i].track_number.length;
 
-                        console.log(trackItemsLength);
                           
                          for (let j =0 ; j<trackItemsLength ; j++){
-                             console.log('in loop');
-                         promises.push(ProductSerialised.update({ location_id:req.body.to},{ where: { serial_number: allTransactionsItems[i].track_number[j], product_id: allTransactionsItems[i].product_id,location_id:req.body.from}}));
-                         }
+                         
+
+                          promises.push(ProductSerialised.update({ location_id:req.body.to},{ where: { serial_number: allTransactionsItems[i].track_number[j], product_id: allTransactionsItems[i].product_id,location_id:req.body.from}}));
+                         
+                        
+                        }
                      
                      }
                     //  else if(allTransactionsItems[i].count_type===2){
                     //      let trackItemsLength=allTransactionsItems[i].track_number.length;
                           
                     //      for (let j =0 ; j<trackItemsLength ; j++){
-                    //          console.log('in loop',j);
-                    //      promises.push(ProductBatch.create({ batch_number:allTransactionsItems[i].track_number[j].batch, product_id: allTransactionsItems[i].product_id,location_id:req.body.to,quantity:allTransactionsItems[i].track_number[j].quantity}));
+                           
+                    //         // const [batch, created] = await ProductBatch.upsert({
+                    //         //     batch_number:allTransactionsItems[i].track_number[j].batch, product_id: allTransactionsItems[i].product_id,location_id:req.body.to,quantity:sequelize.literal(`quantity - ${allTransactionsItems[i].track_number[j].quantity}`)
+                    //         //   });
+                             
+                    //         // if(created){
+                    //         //     console.log(' check update', created,batch)
+                    //         //     promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity - ${allTransactionsItems[i].track_number[j].quantity}`)},{where:{batch_number:allTransactionsItems[i].track_number[j].batch, product_id: allTransactionsItems[i].product_id,location_id:req.body.to,quantity:allTransactionsItems[i].track_number[j].quantity}}))
+                    //         // }
+                    //         // else{
+                    //         //     console.log(' check create', created,batch)
+                    //         //     promises.push(ProductSerialised.create({ batch_number: allTransactionsItems[i].track_number[j], product_id: allTransactionsItems[i].product_id,location_id:req.body.from,quantity:allTransactionsItems[i].track_number[j].quantity})); 
+
+                    //         // }
                     //      }
  
                     //  }
@@ -239,7 +264,43 @@ const stockOperationController ={
 
                 
                 }
+            
 
+          //console.log('merun',AllExixtBatch.array);
+
+          for(let i=0; i<AllExixtBatch.length; i++){
+              console.log('i',i);
+              console.log(AllExixtBatch);
+              console.log(AllExixtBatch[i].index);
+              console.log(AllExixtBatch[i].array);
+              let index=AllExixtBatch[i].index;
+              for(let j=0; j<AllExixtBatch[i].array.length ; j++){
+                let exist=AllExixtBatch[i].array[j];
+                console.log(exist);
+                let batchNumber=allTransactionsItems[index].track_number[j].batch;
+                let quantity=  allTransactionsItems[index].track_number[j].quantity ;
+                let productId= allTransactionsItems[index].product_id;
+                let locationId=req.body.to;
+                
+                 if(exist){   
+                     console.log( 'quantity',allTransactionsItems[index].track_number[j].quantity); 
+                    
+
+                     console.log(batchNumber,quantity,locationId,productId);
+
+                     promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity + ${quantity}`)},{where:{batch_number:allTransactionsItems[index].track_number[j].batch, product_id: allTransactionsItems[index].product_id,location_id:req.body.to}}))
+        
+                 }       
+                 else{
+                    console.log(batchNumber,quantity,locationId,productId);
+                    promises.push(ProductBatch.create({ batch_number: allTransactionsItems[index].track_number[j].batch, product_id: allTransactionsItems[index].product_id,location_id:req.body.to,quantity:quantity})); 
+                 }
+
+                
+
+              }
+
+          }
     
      
            await Promise.all(promises).then((data) => {

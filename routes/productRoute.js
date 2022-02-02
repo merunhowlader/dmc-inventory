@@ -9,6 +9,7 @@ productRouter.post('/products',auth,productController.store);
 productRouter.post('/add',productController.addProduct);
 
 productRouter.post('/addexperation',productController.addProductExperations);
+productRouter.get('/productexperation',productController.getProductExperation);
 
 
 

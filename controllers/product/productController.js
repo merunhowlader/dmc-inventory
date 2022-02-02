@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import { Product,ProductAttribute,Units,Category} from '../../models';
-import productExperation from '../../models/productExperation';
+import { Product,ProductAttribute,Units,Category,ProductExperation,ProductSerialised,ProductBatch} from '../../models';
+
 import CustomErrorHandler from '../../services/CustomErrorHandler';
 const productController ={
    async store(req, res, next){
@@ -129,10 +129,12 @@ const productController ={
     },
     async addProductExperations(req, res, next){
 
+        let table_name=(req.body.count_type===1) ? "productSerialised" : "productBatch"
+
         let data ={
             date:req.body.date,
          
-            table_name:req.body.count_type,
+            table_name:(req.body.count_type===1) ? "productSerialised" : "productBatch",
             track_id:req.body.track_id,
             
            
@@ -141,21 +143,14 @@ const productController ={
         
 
         try{
-
-            //await Product.create(product);
-            const experationExist= await productExperation.findOne({where:{ track_id:req.body.track_id,table_name:req.body.count_type}});
-
-            if(!experationExist){
-                const newProductExperation = await productExperation.create(data).then((d) =>{
+              const newProductExperation = await ProductExperation.create(data).then((d) =>{
                     res.json(d)
                 }).catch((err)=>{
                  
                     next(err);
                 });
 
-            }
-
-            res.json({"message":"experation already exist"})
+          
 
           }catch(err){
               next(err);
@@ -164,7 +159,29 @@ const productController ={
     },
 
     async getProductExperation(req, res, next){
-        res.json({"message":"all experation"})
+
+        try{
+            const serialisedExperation = await ProductExperation.findAll({where:{table_name: 'productBatch'},include:{
+                model: ProductSerialised,
+                include:Product
+             }});
+
+
+             const BatchExperation = await ProductExperation.findAll({where:{table_name: 'productSerialised'},include:{
+                model: ProductBatch,
+                include:Product
+             }});
+
+             res.json({'seralised experation':serialisedExperation, 'batch experation':BatchExperation});
+         
+           
+
+        }catch(err){
+            next(err);
+        }
+
+        
+      
     }
 
 
