@@ -127,6 +127,81 @@ const productController ={
             }
         //res.json(" get all products");
     },
+    async addTrackingNumber(req, res, next){
+
+        try{
+
+            if(req.body.count_type===1){
+                let data={
+                    serial_number:req.body.track_id,
+                    product_id:req.body.product_id,
+                    location_id:req.body.to
+                }
+
+                const serialExist = await ProductSerialised.findOne({where:{serial_number:data.serial_number,product_id:data.product_id}}).catch((err)=>{
+                 
+                    next(err);
+                });
+
+                if(serialExist){
+                    res.json({message:'serial already exist'})
+                }else{
+                    const newProductSerial = await ProductSerialised.create(data).catch((err)=>{
+                     
+                        next(err);
+                    });
+
+                    res.json({message:'product batch added successfully'})
+
+                }
+
+
+
+              
+
+            }
+            else if(req.body.count_type===2){
+                let data={
+                    batch_number:req.body.track_id,
+                    product_id:req.body.product_id,
+                    location_id:req.body.to,
+                    quantity:req.body.quantity
+                }
+
+                const serialExist = await ProductBatch.findOne({where:{batch_number:data.batch_number,product_id:data.product_id,location_id:data.location_id}}).catch((err)=>{
+                 
+                    next(err);
+                });
+
+                if(serialExist){
+                    res.json({message:'batch already exist'})
+                }else{
+                    const newProductBatch = await ProductBatch.create(data).catch((err)=>{
+                     
+                        next(err);
+                    });
+                    res.json({message:'product batch added successfully'})
+
+                }
+
+
+
+               
+
+            }else{
+
+                res.json({message:'something wrong happen '})
+
+            }
+            
+
+        
+
+        }catch(err){
+            next(err);
+          }
+        
+    },
     async addProductExperations(req, res, next){
 
         let table_name=(req.body.count_type===1) ? "productSerialised" : "productBatch"

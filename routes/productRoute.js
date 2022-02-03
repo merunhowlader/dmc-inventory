@@ -12,6 +12,10 @@ productRouter.post('/addexperation',productController.addProductExperations);
 productRouter.get('/productexperation',productController.getProductExperation);
 
 
+//add track number seraila and batch number
+productRouter.post('/addtrackingnumber',productController.addTrackingNumber);
+
+
 
 
 export default productRouter;
