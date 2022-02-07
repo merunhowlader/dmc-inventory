@@ -288,6 +288,195 @@ const stockOperationController ={
         }
 
     },
+    async demand(req, res, next){
+
+        let allTransactionsItems=[...req.body.items];
+
+        let transaction ={
+            from:req.body.from,
+            to:req.body.to,
+            reference:req.body.reference,
+            createdBy:'1',
+            operationType:req.body.operationType,
+        }
+        try{
+            const newOperation = await StockOpration.create(transaction).catch((err)=>{
+                next(err);
+            });
+          
+        
+            if(!newOperation){
+                next(new Error(' fast transaction error'));
+            }
+            let allItem=[];
+            let length=allTransactionsItems.length;
+            
+            let AllSerialNumber=[];
+            let AllBatchindex=[];
+            let AllExixtBatchTo=[];
+            let AllExixtBatchFrom=[];
+
+     
+
+            for(let i=0; i<length;i++){
+               let itemData={
+                   product_id:allTransactionsItems[i].product_id,
+                   quantity:allTransactionsItems[i].amount,
+                   stockOperationId:newOperation.operation_Id
+              
+               }
+               allItem.push(itemData);
+               
+
+               if(allTransactionsItems[i].count_type===2){
+                 
+                 let itemBatch =allTransactionsItems[i].track_data;
+                const asyncRes = await Promise.all(itemBatch.map(async (d) => {
+                    const checkDataExistTo=await ProductBatch.findOne({where:{batch_number:d.track_id,location_id:req.body.to}}).catch((err)=>{
+                                        next(err);
+                            })
+                 
+                     return checkDataExistTo;
+
+                    }));
+                AllExixtBatchTo.push({index:i,array:asyncRes});    
+                  
+               }
+
+     
+
+
+             
+            }
+
+
+            const allitem=await StockOperationItem.bulkCreate(allItem).catch((err)=>{
+                         next(err);
+                })
+
+            
+               
+
+            let promises = [];
+            let i=0;
+           
+
+            for ( i; i < allTransactionsItems.length ; i++) {
+
+
+                    let checkFrom= await Inventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id: req.body.from}}).catch(err => {
+                        
+                        next(err);
+
+                    })
+
+                    let checkTo= await Inventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id: req.body.to}}).catch(err => {
+                        next(err);
+                    })
+
+                    let checkLoan= await LoanInventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id_from: req.body.from,location_id_to: req.body.to}}).catch(err => {
+                
+                        next(err);
+        
+                    })
+
+
+                    if(checkFrom){
+                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity - ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.from} }));
+
+                    }else{
+                        promises.push( Inventory.create({ product_id: allTransactionsItems[i].product_id,location_id: req.body.from,quantity:-allTransactionsItems[i].amount}))
+
+                    }
+                    if(checkTo){
+                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.to} }));
+
+                    }else{
+                        promises.push( Inventory.create({ product_id: allTransactionsItems[i].product_id,location_id: req.body.to,quantity:allTransactionsItems[i].amount}))
+
+                    }
+
+
+
+
+
+                    if(checkLoan){
+                        promises.push(LoanInventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id_from: req.body.from} }));
+
+                    }else{
+                        promises.push( LoanInventory.create({ product_id: allTransactionsItems[i].product_id,location_id_from: req.body.from,location_id_to: req.body.to,quantity:allTransactionsItems[i].amount}))
+
+                    }
+
+       
+
+
+                    if(allTransactionsItems[i].count_type===1){
+                        let trackItemsLength=allTransactionsItems[i].track_data.length;
+
+                          
+                         for (let j =0 ; j<trackItemsLength ; j++){
+
+                            console.log('seerail numbers',allTransactionsItems[i].track_data[j].track_id);
+                         
+
+                          promises.push(ProductSerialised.update({ location_id:req.body.to},{ where: { serial_number: allTransactionsItems[i].track_data[j].track_id, product_id: allTransactionsItems[i].product_id,location_id:req.body.from}}));
+                         
+                        
+                        }
+                     
+                     }
+                
+                }
+
+
+          for(let i=0; i<AllExixtBatchTo.length; i++){
+            //   console.log('i',i);
+            //   console.log(AllExixtBatchTo);
+            //   console.log(AllExixtBatchTo[i].index);
+            //   console.log(AllExixtBatchTo[i].array);
+              let index=AllExixtBatchTo[i].index;
+              for(let j=0; j<AllExixtBatchTo[i].array.length ; j++){
+                let exist=AllExixtBatchTo[i].array[j];
+                //console.log(exist);
+                let batchNumber=allTransactionsItems[index].track_data[j].track_id;
+                let quantity=  allTransactionsItems[index].track_data[j].quantity ;
+                let productId= allTransactionsItems[index].product_id;
+                let locationIdTo=req.body.to;
+                let locationIdFrom=req.body.from;
+                
+                 if(exist){   
+                     promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity + ${quantity}`)},{where:{batch_number:batchNumber, product_id: productId,location_id:locationIdTo}}))
+        
+                 }       
+                 else{
+                    promises.push(ProductBatch.create({ batch_number: batchNumber, product_id: productId,location_id:locationIdTo,quantity:quantity})); 
+                 }
+
+                 promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity - ${quantity}`)},{where:{batch_number:batchNumber, product_id: productId,location_id:locationIdFrom}}))
+
+                
+
+              }
+
+          }
+    
+     
+           await Promise.all(promises).then((data) => {
+                res.json("now check this ,this time it might work");
+            }).catch((err)=>{
+                console.log(' error in promise')
+                next(err);
+            });
+
+           console.log('merun kanti howlader',promises);
+
+        }catch(err){
+            next(new Error(' Somthing Wrong happen please Try aganin'));
+        }
+
+    },
+    
     async supply(req, res, next){
 
         let allTransactionsItems=[...req.body.items];

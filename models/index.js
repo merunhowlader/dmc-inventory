@@ -40,6 +40,8 @@ db.ProductCountType=require("./productCountType")(sequelize,Sequelize);
 db.ProductExperation=require("./productExperation")(sequelize,Sequelize);
 db.ProductSerialised=require("./productSerialised")(sequelize,Sequelize);
 
+//related operation 
+db.relatedOperation=require("./relatedOperation")(sequelize,Sequelize);
 //product expration relation
 
 db.ProductBatch.hasMany(db.ProductExperation,{foreignKey:'track_id',constraints: false,scope:{table_name:'productBatch'}});
