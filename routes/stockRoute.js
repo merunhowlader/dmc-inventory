@@ -13,6 +13,8 @@ stockRoute.post('/loan',stockOperationController.loan);
 stockRoute.get('/allinventory',stockOperationController.inventory);
 stockRoute.post('/supply',stockOperationController.supply);
 
+stockRoute.post('/demand',stockOperationController.demand);
+
 
 
 export default stockRoute;

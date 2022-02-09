@@ -5,8 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     const ProductBatch = sequelize.define('productBatch',{
         batch_number:{
             type:DataTypes.STRING,
-            
-           
          },
          product_id: {
              type:DataTypes.INTEGER,
