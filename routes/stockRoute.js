@@ -9,6 +9,7 @@ stockRoute.get('/operation',stockOperationController.stockOperation);
 
 stockRoute.post('/transfer',stockOperationController.transfer);
 stockRoute.post('/loan',stockOperationController.loan);
+stockRoute.post('/loanreturn',stockOperationController.loanReturn);
 
 stockRoute.get('/allinventory',stockOperationController.inventory);
 stockRoute.post('/supply',stockOperationController.supply);
