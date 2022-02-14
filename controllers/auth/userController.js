@@ -7,7 +7,7 @@ const userController={
     async me(req, res, next){
 
         //logic
-        console.log('user control')
+        //console.log('user control')
         try{
             const user = await User.findOne({where:{user_id:req.user.id}, attributes: ['user_id','username', 'role','department'],}).catch((err)=>{
                 return next(err);
