@@ -1,7 +1,8 @@
 import express from "express";
 import { APP_PORT } from "./config";
 import errorHandler from './middlewares/errorHandler';
-
+//var cors = require('cors')
+import cors from "cors";
 import routes from "./routes";
 const db = require("./models");
 
@@ -12,6 +13,23 @@ const app = express();
 app.use(express.json());
 
 
+// var corsOptions = {
+//   origin: 'http://example.com',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// }
+
+
+const corsOpts = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200,
+  methods: [
+    'GET',
+    'POST',
+  ],
+
+};
+
+app.use(cors(corsOpts));
 
 
 try {
