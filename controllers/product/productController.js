@@ -85,13 +85,14 @@ const productController ={
 
             const exist = await Product.findAll(
                 {
-                raw: true,
-                attributes: ['product_id', ['name', 'title']],
+               
+                attributes: [['product_id','id'], ['name', 'title'],'count_type'],
                 include:[{
                        model: ProductAttribute,
                        
                        include:{
                         model: Category,
+                        //right: true ,
             
                         required: false,     
                          },
@@ -101,11 +102,13 @@ const productController ={
                 },
                 {
                     model: Units,
-                    
+                    right: true ,
                     attributes:['name'],
                   
                     required: false, 
-                }
+                },
+
+            
             
             
             

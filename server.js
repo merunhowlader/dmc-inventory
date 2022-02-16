@@ -20,7 +20,7 @@ app.use(express.json());
 
 
 const corsOpts = {
-  origin: 'http://localhost:3000',
+  origin: '*',
   optionsSuccessStatus: 200,
   methods: [
     'GET',
@@ -30,10 +30,11 @@ const corsOpts = {
 };
 
 app.use(cors(corsOpts));
+app.use('/api/v1/',routes);
 
 
 try {
-  db.sequelize.sync({ alter: true,force: true }).then(() => {
+  db.sequelize.sync({ alter: true,force: false }).then(() => {
     console.log("Drop and re-sync db.");
   }).catch(err =>{
     console.log(err);
@@ -47,7 +48,7 @@ try {
 
 
 
-app.use('/api/v1/',routes);
+
 app.use(errorHandler);
 app.listen(APP_PORT,()=>console.log(`listening on port ${APP_PORT}`));
 

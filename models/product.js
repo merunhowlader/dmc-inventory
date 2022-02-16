@@ -20,7 +20,7 @@ const Product = sequelize.define('product',{
         
      },
      count_type:{
-      type:DataTypes.BOOLEAN,
+      type:DataTypes.INTEGER,
       allowNull: false,
      },
 
