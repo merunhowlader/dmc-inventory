@@ -3,7 +3,8 @@ const router = express.Router();
 import {registerController,loginController,userController,refreshController} from '../controllers';
 import auth from '../middlewares/auth';
 import productRoute from './productRoute';
-import stockRoute from './stockRoute';
+import operationRoute from './operationRoute';
+import locationRoute from './locationRoute';
 
 router.post('/register',registerController.register);
 
@@ -17,7 +18,8 @@ router.post('/logout',auth,loginController.logout);
 
 router.use('/product/',productRoute);
 
-router.use('/stock',stockRoute);
+router.use('/operation',operationRoute);
+router.use('/location',locationRoute);
 
 export default router;
 

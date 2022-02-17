@@ -34,7 +34,7 @@ app.use('/api/v1/',routes);
 
 
 try {
-  db.sequelize.sync({ alter: true,force: false }).then(() => {
+  db.sequelize.sync({ alter: true,force: true }).then(() => {
     console.log("Drop and re-sync db.");
   }).catch(err =>{
     console.log(err);

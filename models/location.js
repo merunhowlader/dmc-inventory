@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
          type:{
              type:DataTypes.INTEGER,
              allowNull: false
+         },
+         isSub:{
+             type:DataTypes.BOOLEAN,
+             allowNull: false,
+             defaultValue:false
          }
         },{
             timestamps:false,

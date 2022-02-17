@@ -15,6 +15,11 @@ const Product = sequelize.define('product',{
      description:{
         type:DataTypes.STRING,
      },
+     sku: {
+        type:DataTypes.STRING,
+        allowNull: false,  
+     }
+     ,
      unit_id:{
         type:DataTypes.INTEGER,
         

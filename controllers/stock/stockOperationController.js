@@ -619,8 +619,11 @@ const stockOperationController ={
     },
     
     async supply(req, res, next){
+        console.log(req.body);
+        //next('new error');
+        //res.json(req.body);
 
-        let allTransactionsItems=[...req.body.items];
+         let allTransactionsItems=[...req.body.items];
 
         let transaction ={
             from:req.body.from,
@@ -757,7 +760,7 @@ const stockOperationController ={
     
      
            await Promise.all(promises).then((data) => {
-                res.json("now theck this ,this time it might work");
+                res.json(200,"now theck this ,this time it might work");
             }).catch((err)=>{
                 console.log(' error in promise')
                 next(err);
@@ -786,7 +789,7 @@ const stockOperationController ={
                                 include: {
                                     model: Units,
 
-                                },
+                            },
                                 
                                 
                                 required: false,     
