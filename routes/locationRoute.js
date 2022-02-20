@@ -6,9 +6,10 @@ const locationRoute = express.Router();
 
 
 locationRoute.get('/',locationController.getAll);
-
 locationRoute.post('/',locationController.addNewLocation);
 
+locationRoute.get('/type',locationController.getTypes);
+locationRoute.post('/type',locationController.addType);
 //locationRoute.post('/add',stocklocationController.transfer);
 
 

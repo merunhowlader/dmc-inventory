@@ -3,10 +3,6 @@ module.exports = (sequelize, DataTypes) => {
 
 
     const ProductAttribute = sequelize.define('productAttribute',{
-         sku: {
-            type:DataTypes.STRING,
-         }
-         ,
         created_by: {
             type: DataTypes.STRING
         },

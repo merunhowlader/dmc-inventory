@@ -33,7 +33,6 @@ db.StockOperationItem=require("./stockOperationItem")(sequelize, Sequelize);
 db.LocationType=require("./locationType")(sequelize,Sequelize);
 db.LoanInventory=require("./loanInventory")(sequelize,Sequelize);
 db.LocationType=require("./locationType")(sequelize,Sequelize);
-
 //serial batch exparation
 db.ProductBatch=require("./productBatch")(sequelize,Sequelize);
 db.ProductCountType=require("./productCountType")(sequelize,Sequelize);
@@ -59,8 +58,12 @@ db.ProductBatch.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: fa
 db.Product.hasOne(db.ProductSerialised,{foreignKey: 'product_id',  constraints: false})
 db.ProductSerialised.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});
 
+
 db.LocationType.hasMany(db.Location,{foreignKey: 'type',  constraints: false});
 db.Location.belongsTo(db.LocationType,{foreignKey: 'type',  constraints: false});
+
+
+db.Location.hasMany(db.Location, {foreignKey: 'parentLocation',as:'substore',  constraints: false}) ;
 
 
 db.StockOperationItem.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});

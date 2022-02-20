@@ -19,6 +19,7 @@ router.post('/logout',auth,loginController.logout);
 router.use('/product/',productRoute);
 
 router.use('/operation',operationRoute);
+
 router.use('/location',locationRoute);
 
 export default router;

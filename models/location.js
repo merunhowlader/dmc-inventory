@@ -13,17 +13,18 @@ module.exports = (sequelize, DataTypes) => {
          },
          name: {
              type:DataTypes.STRING,
-             allowNull: false
+             allowNull: false,
+             unique: true
          },
          type:{
              type:DataTypes.INTEGER,
-             allowNull: false
+             //allowNull: false
          },
-         isSub:{
-             type:DataTypes.BOOLEAN,
-             allowNull: false,
-             defaultValue:false
-         }
+         parentLocation:{
+            type:DataTypes.INTEGER,
+            defaultValue:null, 
+        },
+         
         },{
             timestamps:false,
         });
