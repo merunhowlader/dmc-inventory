@@ -6,6 +6,8 @@ import productRoute from './productRoute';
 import operationRoute from './operationRoute';
 import locationRoute from './locationRoute';
 
+import reportRoute from './reportRoute';
+
 router.post('/register',registerController.register);
 
 router.post('/login',loginController.login);
@@ -21,6 +23,7 @@ router.use('/product/',productRoute);
 router.use('/operation',operationRoute);
 
 router.use('/location',locationRoute);
+router.use('/report',reportRoute);
 
 export default router;
 
