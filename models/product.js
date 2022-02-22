@@ -7,32 +7,35 @@ const Product = sequelize.define('product',{
         type:DataTypes.INTEGER,
         primaryKey:true,
         autoIncrement:true,
-     },
+       },
      name: {
          type:DataTypes.STRING,
          allowNull: false,    
-     },
-     description:{
-        type:DataTypes.STRING,
-     },
+       },
      sku: {
         type:DataTypes.STRING,
         allowNull: false,  
-     }
-     ,
+       }
+      ,
      unit_id:{
         type:DataTypes.INTEGER,
         
-     },
+      },
      count_type:{
       type:DataTypes.INTEGER,
       allowNull: false,
-     },
+       },
+       price:{
+        type: DataTypes.DECIMAL(10,2),
+       },
+     category_id:{
+      type:DataTypes.INTEGER
+       },
+     returnable_product:{
+      type:DataTypes.BOOLEAN,
+      defaultValue: false
 
-     notice_amount: {
-        type:DataTypes.INTEGER,
      }
-    
     },{
         timestamps:true,
     });

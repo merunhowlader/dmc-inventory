@@ -4,6 +4,7 @@ import errorHandler from './middlewares/errorHandler';
 //var cors = require('cors')
 import cors from "cors";
 import routes from "./routes";
+
 const db = require("./models");
 
 
@@ -34,7 +35,7 @@ app.use('/api/v1/',routes);
 
 
 try {
-  db.sequelize.sync({ alter: true,force: true }).then(() => {
+  db.sequelize.sync({ alter: true,force: false }).then(() => {
     console.log("Drop and re-sync db.");
   }).catch(err =>{
     console.log(err);

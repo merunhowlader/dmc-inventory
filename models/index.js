@@ -57,8 +57,6 @@ db.ProductBatch.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: fa
 
 db.Product.hasOne(db.ProductSerialised,{foreignKey: 'product_id',  constraints: false})
 db.ProductSerialised.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});
-
-
 db.LocationType.hasMany(db.Location,{foreignKey: 'type',  constraints: false});
 db.Location.belongsTo(db.LocationType,{foreignKey: 'type',  constraints: false});
 
@@ -92,8 +90,8 @@ db.ProductAttribute.belongsTo(db.Product,{foreignKey: 'product_id',  constraints
  db.Units.hasMany(db.Product, { foreignKey: 'unit_id',constraints: false});
  db.Product.belongsTo(db.Units, { foreignKey: 'unit_id',  constraints: false });
 
-db.Category.hasMany(db.ProductAttribute, { foreignKey: 'category_id',  constraints: false });
-db.ProductAttribute.belongsTo(db.Category, { foreignKey: 'category_id',  constraints: false });
+db.Category.hasMany(db.Product, { foreignKey: 'category_id',  constraints: false });
+db.Product.belongsTo(db.Category, { foreignKey: 'category_id',  constraints: false });
 
 db.Product.hasMany(db.Inventory, { foreignKey: 'product_id',  constraints: false });
 db.Inventory.belongsTo(db.Product, { foreignKey: 'product_id',  constraints: false });
