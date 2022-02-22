@@ -31,6 +31,15 @@ const User = sequelize.define('user',{
     role: {
         type:DataTypes.INTEGER
     },
+    location:{
+        type:DataTypes.INTEGER
+
+    },
+    status:{
+        type:DataTypes.BOOLEAN,
+        defaultValue: true
+
+    },
     password: {
         type: DataTypes.STRING
     },
