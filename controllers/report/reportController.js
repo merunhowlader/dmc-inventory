@@ -23,6 +23,9 @@ const loginController ={
     async productExperation(req, res, next) {
         res.json('hello monthy inventory report');
     },
+    async allUsers(req, res, next) {
+        res.json('hello monthy inventory report');
+    },
 
 
 
