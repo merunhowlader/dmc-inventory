@@ -5,3 +5,5 @@ const reportRouter = express.Router();
 
 //productRouter.get('/all',productController.getAll);
 reportRouter.get('/inventory',reportController.monthlyInventory);
+
+export default reportRouter;

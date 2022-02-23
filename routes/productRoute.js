@@ -18,12 +18,13 @@ productRouter.get('/unit',productController.getUnit);
 productRouter.post('/unit',productController.addUnit);
 
 
-productRouter.post('/addexperation',productController.addProductExperations);
-productRouter.get('/productexperation',productController.getProductExperation);
+productRouter.post('/experation',productController.addProductExperations);
+productRouter.get('/experation',productController.getProductExperation);
 
 
 //add track number seraila and batch number
-productRouter.post('/addtrackingnumber',productController.addTrackingNumber);
+productRouter.get('/trackingnumber',productController.getTrackingNumber);
+productRouter.post('/trackingnumber',productController.addTrackingNumber);
 
 
 

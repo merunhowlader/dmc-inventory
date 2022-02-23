@@ -5,8 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     const ProductExperation = sequelize.define('productExperation',{
         
          date: {
-            type:DataTypes.STRING,
+            type:DataTypes.DATEONLY,
                
+         },
+         product_id:{
+             type:DataTypes.INTEGER,
          },
          track_id:{
              type:DataTypes.STRING,

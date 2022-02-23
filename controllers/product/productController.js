@@ -30,7 +30,6 @@ const productController ={
     },
 
     async getProducts (req,res, next){
-        console.log('merun ckeck');
         try{
 
             const exist = await Product.findAll(
@@ -40,10 +39,7 @@ const productController ={
                 include:[
                 {
                     model: Category,
-                    //right: true ,
-        
                     required: false,   
-
                 }
                  ,
                 {
@@ -53,18 +49,8 @@ const productController ={
                   
                     required: false, 
                 },
-
-            
-            
-            
-            
-            
-            ],
-                
-                required: false,
-              
-            
-                
+            ], 
+                required: false, 
                 
             }).catch((err)=>{
                 return next(err);
@@ -331,7 +317,47 @@ const productController ={
             }
         //res.json(" get all products");
     },
+   
+    async  getTrackingNumber(req, res, next){
+
+        try{
+
+          
+
+                const serialExist = await ProductSerialised.findAll().catch((err)=>{
+                 
+                    next(err);
+                });
+
+              
+
+              
+
+           
+                const BatchExist = await ProductBatch.findAll().catch((err)=>{
+                 
+                    next(err);
+                });
+
+                res.json({"serialNumber":serialExist,"batchNumber":BatchExist})
+
+
+
+
+
+
+               
+
+        
+
+        }catch(err){
+            next(err);
+          }
+        
+    },
     async addTrackingNumber(req, res, next){
+
+
 
         try{
 
@@ -372,7 +398,7 @@ const productController ={
                     quantity:req.body.quantity
                 }
 
-                const serialExist = await ProductBatch.findOne({where:{batch_number:data.batch_number,product_id:data.product_id,location_id:data.location_id}}).catch((err)=>{
+                const serialExist = await ProductBatch.findOne({where:{batch_number:data.batch_number,product_id:data.product_id}}).catch((err)=>{
                  
                     next(err);
                 });
@@ -440,18 +466,26 @@ const productController ={
     async getProductExperation(req, res, next){
 
         try{
-            const serialisedExperation = await ProductExperation.findAll({where:{table_name: 'productBatch'},include:{
-                model: ProductSerialised,
-                include:Product
+            // const serialisedExperation = await ProductExperation.findAll({where:{table_name: 'productBatch'},include:{
+            //     model: ProductBatch ,
+            //     include:Product
+            //  }});
+
+            const serialisedExperation = await Product.findAll({where:{count_type: 2},include:{
+                model: ProductBatch ,
+                include:{
+                    model:ProductExperation,
+                    where:{table_name: 'productBatch'}
+                }
              }});
 
 
              const BatchExperation = await ProductExperation.findAll({where:{table_name: 'productSerialised'},include:{
-                model: ProductBatch,
+                model: ProductSerialised,
                 include:Product
              }});
 
-             res.json({'seralised experation':serialisedExperation, 'batch experation':BatchExperation});
+             res.json({'seralised_experation':serialisedExperation, 'batch_experation':BatchExperation});
          
            
 
