@@ -43,13 +43,10 @@ db.ProductSerialised=require("./productSerialised")(sequelize,Sequelize);
 db.RelatedOperation=require("./relatedOperation")(sequelize,Sequelize);
 //product expration relation
 
-db.ProductBatch.hasMany(db.ProductExperation,{foreignKey:'track_id',constraints: false,scope:{table_name:'productBatch'}});
-
-db.ProductSerialised.hasMany(db.ProductExperation,{foreignKey:'track_id',constraints: false,scope:{table_name:'productSerialised'}});
-
-
-
+db.ProductBatch.hasMany(db.ProductExperation,{foreignKey:'track_id', targetKey:'track_id',constraints: false,scope:{table_name:'productBatch'}});
 db.ProductExperation.belongsTo(db.ProductBatch,{foreignKey:'track_id', targetKey:'batch_number',constraints: false});
+
+db.ProductSerialised.hasMany(db.ProductExperation,{foreignKey:'track_id', targetKey:'track_id',constraints: false,scope:{table_name:'productSerialised'}});
 db.ProductExperation.belongsTo(db.ProductSerialised,{foreignKey:'track_id', targetKey:'serial_number',constraints: false});
 
 db.Product.hasOne(db.ProductBatch,{foreignKey: 'product_id',  constraints: false});

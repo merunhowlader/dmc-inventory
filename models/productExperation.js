@@ -5,8 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     const ProductExperation = sequelize.define('productExperation',{
         
          date: {
-            type:DataTypes.DATEONLY,
-               
+            type:DataTypes.DATE,
          },
          product_id:{
              type:DataTypes.INTEGER,

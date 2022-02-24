@@ -57,6 +57,8 @@ const stockOperationController ={
                  
               }
             }
+
+      
                const allitem=await StockOperationItem.bulkCreate(allItem).catch((err)=>{
                          next(err);
                 }) 
@@ -213,6 +215,7 @@ const stockOperationController ={
                   
                }
             }
+            console.log(allItem);
             const allitem=await StockOperationItem.bulkCreate(allItem).catch((err)=>{
                          next(err);
                 });
@@ -643,6 +646,8 @@ const stockOperationController ={
             let allItem=[];
             let length=allTransactionsItems.length;
             let AllExixtBatchTo=[];
+
+            let AllExistSerialTo=[];
   
 
             for(let i=0; i<length;i++){
@@ -659,7 +664,7 @@ const stockOperationController ={
                  
                 let itemBatch =allTransactionsItems[i].track_data;
                const asyncRes = await Promise.all(itemBatch.map(async (d) => {
-                   const checkDataExistTo=await ProductBatch.findOne({where:{batch_number:d.track_id,location_id:req.body.to}}).catch((err)=>{
+                   const checkDataExistTo=await ProductBatch.findOne({where:{batch_number:d.track_id}}).catch((err)=>{
                                        next(err);
                            })
                 
@@ -667,6 +672,23 @@ const stockOperationController ={
 
                    }));
                AllExixtBatchTo.push({index:i,array:asyncRes});    
+                 
+              }
+
+              if(allTransactionsItems[i].count_type===1){
+                 
+                let itemSerial =allTransactionsItems[i].track_data;
+
+                const asyncSerialRes = await Promise.all(itemSerial.map(async (d) => {
+                    const checkDataExistTo=await ProductSerialised.findOne({where:{serial_number:d.track_id}}).catch((err)=>{
+                                        next(err);
+                            })
+                 
+                     return checkDataExistTo;
+ 
+                    }));
+                AllExistSerialTo.push({index:i,array:asyncSerialRes});   
+              
                  
               }
             }
@@ -677,13 +699,19 @@ const stockOperationController ={
 
             let promises = [];
             let i=0;
+
+            console.log('serali bulk data',AllExistSerialTo);
+
+               
+
+            
            
 
             for ( i; i < allTransactionsItems.length ; i++) {
 
                     let checkTo= await Inventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id: req.body.to}}).catch(err => {
                         next(err);
-             })
+                        })
 
                    
 
@@ -695,15 +723,15 @@ const stockOperationController ={
 
                     }
 
-                    if(allTransactionsItems[i].count_type===1){
-                       let trackItemsLength=allTransactionsItems[i].track_data.length;
+                    // if(allTransactionsItems[i].count_type===1){
+                    //    let trackItemsLength=allTransactionsItems[i].track_data.length;
                          
-                        for (let j =0 ; j<trackItemsLength ; j++){
-                            console.log('in loop');
-                        promises.push(ProductSerialised.create({ serial_number:allTransactionsItems[i].track_data[j].track_id, product_id: allTransactionsItems[i].product_id,location_id:req.body.to}));
-                        }
+                    //     for (let j =0 ; j<trackItemsLength ; j++){
+                    //         console.log('in loop');
+                    //     promises.push(ProductSerialised.create({ serial_number:allTransactionsItems[i].track_data[j].track_id, product_id: allTransactionsItems[i].product_id,location_id:req.body.to}));
+                    //     }
                     
-                    }
+                    // }
                     // else if(allTransactionsItems[i].count_type===2){
                     //     let trackItemsLength=allTransactionsItems[i].track_data.length;
                          
@@ -724,6 +752,38 @@ const stockOperationController ={
 
                 
              }
+
+
+
+             for(let i=0; i<AllExistSerialTo.length; i++){
+           
+                  let index=AllExistSerialTo[i].index;
+
+
+                  for(let j=0; j<AllExistSerialTo[i].array.length ; j++){
+                        let exist=AllExistSerialTo[i].array[j];
+            
+                        let serialNumber=allTransactionsItems[index].track_data[j].track_id;
+                    
+                        let productId= allTransactionsItems[index].product_id;
+                        let locationIdTo=req.body.to;
+                        let locationIdFrom=req.body.from;
+                        
+                        if(exist){   
+                            promises.push(ProductSerialised.update({ location_id:locationIdTo},{where:{serial_number:serialNumber }}))
+                
+                        }       
+                        else{
+                            promises.push(ProductSerialised.create({ serial_number: serialNumber, product_id: productId,location_id:locationIdTo})); 
+                        }
+    
+                  }
+    
+              }
+
+          
+
+            
 
 
           for(let i=0; i<AllExixtBatchTo.length; i++){
@@ -760,7 +820,9 @@ const stockOperationController ={
     
      
            await Promise.all(promises).then((data) => {
-                res.json(200,"now theck this ,this time it might work");
+                //res.json(200,"now theck this ,this time it might work");
+                res.status(200).json('your oppration was succesfull')
+
             }).catch((err)=>{
                 console.log(' error in promise')
                 next(err);

@@ -7,6 +7,7 @@ import crypto from 'crypto';
 
 
 import CustomErrorHandler from '../../services/CustomErrorHandler';
+import { Sequelize } from 'sequelize';
 const productController ={
    async store(req, res, next){
     try{
@@ -324,7 +325,13 @@ const productController ={
 
           
 
-                const serialExist = await ProductSerialised.findAll().catch((err)=>{
+                const serialExist = await  ProductSerialised.findAll({
+                    include:[ {
+                        model: ProductExperation,
+                       
+                    
+                    }]
+                }).catch((err)=>{
                  
                     next(err);
                 });
@@ -334,7 +341,17 @@ const productController ={
               
 
            
-                const BatchExist = await ProductBatch.findAll().catch((err)=>{
+                const BatchExist = await ProductBatch.findAll({
+               
+                    include:[
+                    {
+                        model: ProductExperation, 
+                    }
+    
+                ], 
+                    required: false, 
+                    
+                }).catch((err)=>{
                  
                     next(err);
                 });
@@ -381,7 +398,7 @@ const productController ={
                         next(err);
                     });
 
-                    res.json({message:'product batch added successfully'})
+                    res.json(newProductSerial)
 
                 }
 
@@ -410,7 +427,7 @@ const productController ={
                      
                         next(err);
                     });
-                    res.json({message:'product batch added successfully'})
+                    res.json(newProductBatch)
 
                 }
 
@@ -434,13 +451,18 @@ const productController ={
     },
     async addProductExperations(req, res, next){
 
-        let table_name=(req.body.count_type===1) ? "productSerialised" : "productBatch"
+       
+         console.log(req.body.date);
+        let neExp=req.body.date.toString();
+        let birthday = new Date(req.body.date.toString())
+        let expdate=new Date();
 
+        console.log(neExp);
         let data ={
-            date:req.body.date,
+            date:expdate,
          
             table_name:(req.body.count_type===1) ? "productSerialised" : "productBatch",
-            track_id:req.body.track_id,
+            //track_id:req.body.track_id,
             
            
         }
