@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         location_id_from: {
              type:DataTypes.INTEGER,
              
-         },
+          },
          location_id_to: {
             type:DataTypes.INTEGER,
             

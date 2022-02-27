@@ -4,6 +4,6 @@ import auth from '../middlewares/auth';
 const reportRouter = express.Router();
 
 //productRouter.get('/all',productController.getAll);
-reportRouter.get('/inventory',reportController.monthlyInventory);
+reportRouter.get('/inventory',reportController.myInventory);
 
 export default reportRouter;

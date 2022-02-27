@@ -108,8 +108,12 @@ db.Inventory.belongsTo(db.Location, { foreignKey: 'location_id',  constraints: f
 db.Product.hasMany(db.LoanInventory, { foreignKey: 'product_id',  constraints: false });
 db.LoanInventory.belongsTo(db.Product, { foreignKey: 'product_id',  constraints: false });
 
-db.Location.hasMany(db.LoanInventory, { foreignKey: 'location_id_from',  constraints: false });
+db.Location.hasMany(db.LoanInventory, { foreignKey: 'location_id_from',as:'from',  constraints: false });
+db.Location.hasMany(db.LoanInventory, { foreignKey: 'location_id_to',as:'to',  constraints: false });
+
 db.LoanInventory.belongsTo(db.Location, { foreignKey: 'location_id_from',  constraints: false });
+db.LoanInventory.belongsTo(db.Location, { foreignKey: 'location_id_to',  constraints: false });
+
 
 
 module.exports = db;
