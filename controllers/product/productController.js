@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { Product,ProductAttribute,Units,Category,ProductExperation,ProductSerialised,ProductBatch} from '../../models';
+import { Product,ProductAttribute,Units,Category,ProductExperation,ProductSerialised,ProductBatch, Inventory} from '../../models';
 import crypto from 'crypto'; 
 
 
@@ -47,6 +47,12 @@ const productController ={
                     model: Units,
                     right: true ,
                     attributes:['name'],
+                  
+                    required: false, 
+                },
+                {
+                    model: Inventory,
+                   
                   
                     required: false, 
                 },
