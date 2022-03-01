@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
          } ,   
          from: {
              type:DataTypes.STRING,
+             allowNull: false,
+             
             //  references: { // Required field
             //     model: 'location',
             //     key: 'location_id',
@@ -21,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
          },
          to: {
              type:DataTypes.INTEGER,
+             allowNull: false,
             //  references: { // Required field
             //     model: 'location',
             //     key: 'location_id',

@@ -679,7 +679,13 @@ const stockOperationController ={
             operationType:"supply",
         }
         try{
-            const newOperation = await StockOpration.create(transaction).catch((err)=>{
+              await sequelize.transaction(async (t) => {
+
+              
+
+
+            const newOperation = await StockOpration.create(transaction,{transaction: t}).catch((err)=>{
+                t.rollback()
                 next(err);
             });
         
@@ -702,7 +708,8 @@ const stockOperationController ={
                }
                allItem.push(itemData);
 
-              let newlyCreatedItem= await StockOperationItem.create(itemData).catch((err)=>{
+              let newlyCreatedItem= await StockOperationItem.create(itemData,{transaction: t}).catch((err)=>{
+                t.rollback()
                 next(err);
              });
         
@@ -712,11 +719,12 @@ const stockOperationController ={
                 
                 let itemBatch =allTransactionsItems[i].track_data;
                const asyncRes = await Promise.all(itemBatch.map(async (d) => {
-                await OperationTrackRecord.create({track_id:d.track_id, quantity:d.quantity,item_operation_id:newlyCreatedItem.id}).catch((err)=>{
+                await OperationTrackRecord.create({track_id:d.track_id, quantity:d.quantity,item_operation_id:newlyCreatedItem.id},{transaction: t}).catch((err)=>{
                     next(err);
                  });
                  console.log("im in operation track");
              const checkDataExistTo=await ProductBatch.findOne({where:{batch_number:d.track_id}}).catch((err)=>{
+                                       t.rollback()
                                        next(err);
                            })
                 
@@ -733,9 +741,15 @@ const stockOperationController ={
 
                 const asyncSerialRes = await Promise.all(itemSerial.map(async (d) => {
 
+                    await OperationTrackRecord.create({track_id:d.track_id, quantity:1,item_operation_id:newlyCreatedItem.id},{transaction: t}).catch((err)=>{
+                        t.rollback()
+                        next(err);
+                     });
+
                     
                     const checkDataExistTo=await ProductSerialised.findOne({where:{serial_number:d.track_id}}).catch((err)=>{
-                                        next(err);
+                        t.rollback()
+                            next(err);
                             })
                  
                      return checkDataExistTo;
@@ -766,16 +780,17 @@ const stockOperationController ={
             for ( i; i < allTransactionsItems.length ; i++) {
 
                     let checkTo= await Inventory.findOne({where:{ product_id: allTransactionsItems[i].product_id,location_id: req.body.to}}).catch(err => {
+                        t.rollback()
                         next(err);
                         })
 
                    
 
                     if(checkTo){
-                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.to} }));
+                        promises.push(Inventory.update({ quantity:  sequelize.literal(`quantity + ${allTransactionsItems[i].amount}`)},{ where: { product_id: allTransactionsItems[i].product_id,location_id: req.body.to},transaction: t }));
 
                     }else{
-                        promises.push( Inventory.create({ product_id: allTransactionsItems[i].product_id,location_id: req.body.to,quantity:allTransactionsItems[i].amount}))
+                        promises.push( Inventory.create({ product_id: allTransactionsItems[i].product_id,location_id: req.body.to,quantity:allTransactionsItems[i].amount},{transaction: t}))
 
                     }
 
@@ -799,13 +814,7 @@ const stockOperationController ={
                     // }
 
 
-                  
-
                 
-
-
-                    
-
                 
              }
 
@@ -826,11 +835,11 @@ const stockOperationController ={
                         let locationIdFrom=req.body.from;
                         
                         if(exist){   
-                            promises.push(ProductSerialised.update({ location_id:locationIdTo},{where:{serial_number:serialNumber }}))
+                            promises.push(ProductSerialised.update({ location_id:locationIdTo},{where:{serial_number:serialNumber },transaction: t}))
                 
                         }       
                         else{
-                            promises.push(ProductSerialised.create({ serial_number: serialNumber, product_id: productId,location_id:locationIdTo})); 
+                            promises.push(ProductSerialised.create({ serial_number: serialNumber, product_id: productId,location_id:locationIdTo},{transaction: t})); 
                         }
     
                   }
@@ -858,14 +867,14 @@ const stockOperationController ={
                 let locationIdFrom=req.body.from;
                 
                  if(exist){   
-                     promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity + ${quantity}`)},{where:{batch_number:batchNumber, product_id: productId,location_id:locationIdTo}}))
+                     promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity + ${quantity}`)},{where:{batch_number:batchNumber, product_id: productId,location_id:locationIdTo} ,transaction: t}))
         
                  }       
                  else{
-                    promises.push(ProductBatch.create({ batch_number: batchNumber, product_id: productId,location_id:locationIdTo,quantity:quantity})); 
+                    promises.push(ProductBatch.create({ batch_number: batchNumber, product_id: productId,location_id:locationIdTo,quantity:quantity},{transaction: t})); 
                  }
 
-                 promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity - ${quantity}`)},{where:{batch_number:batchNumber, product_id: productId,location_id:locationIdFrom}}))
+                 promises.push(ProductBatch.update({ quantity:sequelize.literal(`quantity - ${quantity}`)},{where:{batch_number:batchNumber, product_id: productId,location_id:locationIdFrom},transaction: t}))
 
                 
 
@@ -875,16 +884,28 @@ const stockOperationController ={
 
     
      
-           await Promise.all(promises).then((data) => {
-                //res.json(200,"now theck this ,this time it might work");
-                res.status(200).json('your oppration was succesfull')
+          return await Promise.all(promises)
 
-            }).catch((err)=>{
-                console.log(' error in promise')
-                next(err);
-            });
+        //   .then((data) => {
+        //     //res.json(200,"now theck this ,this time it might work");
+        //    // res.status(200).json('your oppration was succesfull')
 
-           console.log('merun kanti howlader',promises);
+        // }).catch((err)=>{
+        //     console.log(' error in promise');
+        //     t.rollback()
+        //     next(err);
+        // });
+
+            
+        }).then(function (result) {
+            console.log("YAY");
+            res.status(200).json('your operation was successfully done')
+        }).catch(function (err) {
+            console.log("NO!!!");
+            return next(err);
+        });
+
+        
 
         }catch(err){
             next(new Error(' Somthing Wrong happen please Try aganin'));
