@@ -36,7 +36,7 @@ const productController ={
             const exist = await Product.findAll(
                 {
                
-                attributes: [['product_id','id'], ['name', 'title'],'count_type'],
+                attributes: [['product_id','id'], ['name', 'title'],'count_type','sku'],
                 include:[
                 {
                     model: Category,
