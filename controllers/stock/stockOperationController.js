@@ -736,16 +736,57 @@ const stockOperationController ={
         let allTransactionsItems=[...req.body.items];
 
         let userId=1;
-
-        let transaction ={
+        
+        let mainOperationData ={
             from:req.body.from,
             to:req.body.to,
             reference:req.body.reference,
-            createdBy:userId,
-            operationType:req.body.operationType,
+            createdBy:1,
+            operationType:"demand",
         }
-        try{
-            const newOperation = await StockOpration.create(transaction).catch((err)=>{
+
+        let formData={
+            from:req.body.from,
+            to:req.body.to,
+            reference:req.body.reference,
+            createdBy:1,
+            operationType:"demand",
+            items:req.body.items
+        }
+
+
+
+
+            
+        const demandSchema=Joi.object({
+            from:Joi.number().integer().required(),
+            to:Joi.number().integer().disallow(Joi.ref('from')).required(),
+            reference: Joi.string().allow(""),
+            operationType:Joi.string().allow(""),
+            createdBy:Joi.number().integer().required(),
+            items: Joi.array().items(Joi.object().keys(
+                {product_id:Joi.number().integer().required(),
+                 item_name:Joi.string(),
+                 unit:Joi.string(),
+                 amount:Joi.number().integer().required(),
+                 count_type: Joi.number().integer().required(),
+                }).min(1)).required()
+           
+            
+
+        })
+
+        const {error} =demandSchema.validate(formData);
+
+       console.error('this is error message',error);
+
+       console.log(mainOperationData.operationType);
+
+        if(error) {
+            return next(error);
+        }
+        await sequelize.transaction(async (t) => {
+            const newOperation = await StockOpration.create(mainOperationData,{transaction: t}).catch((err)=>{
                 next(err);
             });
 
@@ -765,29 +806,102 @@ const stockOperationController ={
                
                 }
                 allItem.push(itemData);
+               
              }
-                const allitem=await StockOperationItem.bulkCreate(allItem).catch((err)=>{
-                          next(err);
-                 })
+
+             await StockOperationItem.bulkCreate(allItem,{transaction: t}).catch((err)=>{
+                next(err);
+                })
+
+                console.log(newOperation.operation_Id);
+              
 
                
 
-                 const newRelatedOperation=await RelatedOperation.create({act_id:newOperation.operation_Id,demand_operation:transaction.operationType}).catch((err)=>{
+             let newRelatedOperation=await RelatedOperation.create({act_id:newOperation.operation_Id,demand_operation:mainOperationData.operationType},{transaction: t}).catch((err)=>{
                     next(err);
                   })
 
 
+                  
+                  return newRelatedOperation;
 
-                 res.json({'hel':`your demand operation id ${newRelatedOperation.id} .please node the id for notification`});
+
+
+               
  
   
 
      
 
+       
+          
+      }).then(function (result) {
+          console.log(result);
+        console.log("YAY");
+        res.status(200).json('your operation was successfully done')
+        }).catch(function (err) {
+            console.log(err);
+            console.log("NO!!!");
+            next(new Error(' Somthing Wrong happen please Try aganin'));
+        });
+
+    },
+
+    async viewSingleOperation(req, res, next){
+       let id = req.params.id;
+
+        try{
+
+            const exist = await StockOpration.findOne({
+                where: {operation_id:id},
+                include:[ {
+                    model: StockOperationItem,
+                    //raw: true,
+                    include:[
+                            {
+                                model: Product,
+                                //attributes:['name'],
+                                        include: {
+                                            model: Units,
+
+                                    },
+                                        
+                                
+                                required: false,     
+                            },{
+                                model: OperationTrackRecord,
+                            
+
+                            }],
+                    required: false,
+                
+                },{
+
+                    model:Location,
+                    attributes:['name'],
+                    as:'From'
+                    
+                    
+                },{
+
+                    model:Location,
+                    attributes:['name'],
+                    as:'To'
+                    
+                    
+                }]
+            });
+
+            if(!exist){
+                res.json("transaction not found")
+            }
+            res.json(exist);
+
         }catch(err){
-
+            next(err);
         }
-
+     
     },
     
     async supply(req, res, next){

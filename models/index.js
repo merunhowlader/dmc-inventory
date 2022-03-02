@@ -42,6 +42,9 @@ db.OperationTrackRecord=require("./operationTrackRecord")(sequelize,Sequelize);
 
 //related operation 
 db.RelatedOperation=require("./relatedOperation")(sequelize,Sequelize);
+
+db.RelatedOperation.belongsTo(db.StockOpration, {foreignKey:'act_id',as: 'act',constraints: false});
+db.RelatedOperation.belongsTo(db.StockOpration, {foreignKey:'react_id',as: 'react',constraints: false});
 //product expration relation
 
 db.ProductBatch.hasMany(db.ProductExperation,{foreignKey:'track_id', targetKey:'track_id',constraints: false,scope:{table_name:'productBatch'}});
@@ -72,6 +75,8 @@ db.StockOperationItem.belongsTo(db.StockOpration,{foreignKey:'stockOperationId',
 
 db.StockOperationItem.hasMany(db.OperationTrackRecord,{foreignKey:'item_operation_id',constraints: false});
 db.OperationTrackRecord.belongsTo(db.StockOperationItem,{foreignKey:'item_operation_id',constraints: false});
+
+
 
  //db.Location.hasMany(db.StockOpration,{foreignKey:'from',as:'from_location',constraints: false});
  // db.Location.hasMany(db.StockOpration,{foreignKey:'to',as:'to_location',constraints: false});

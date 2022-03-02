@@ -12,6 +12,7 @@ operationRoute.post('/loan',stockOperationController.loan);
 operationRoute.post('/loanreturn',stockOperationController.loanReturn);
 
 operationRoute.get('/allinventory',stockOperationController.inventory);
+operationRoute.get('/single/:id',stockOperationController.viewSingleOperation);
 operationRoute.post('/supply',stockOperationController.supply);
 
 operationRoute.post('/demand',stockOperationController.demand);
