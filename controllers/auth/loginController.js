@@ -13,7 +13,7 @@ const loginController ={
 
      
         const loginSchema=Joi.object({
-            email:Joi.string().email().required(),
+            phone:Joi.string().required(),
             password:Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
             
 
@@ -28,7 +28,7 @@ const loginController ={
         }
 
         try {
-            const user = await User.findOne({where:{email:req.body.email}}).catch((err)=>{
+            const user = await User.findOne({where:{phone:req.body.phone}}).catch((err)=>{
                 return next(err);
             })
 

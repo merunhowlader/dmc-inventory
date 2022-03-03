@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
          react_id:{
             type:DataTypes.INTEGER,
         }
+        ,
+        demandStatus:{
+            type:DataTypes.BOOLEAN,
+            
+        }
     
          
         
