@@ -12,13 +12,15 @@ const registerController={
   async  register(req, res, next){
 
         //validation
+//.pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        console.log(req.body);
         const registerSchema = Joi.object({
             username: Joi.string().min(3).max(40).required(),
             email:Joi.string().email().required(),
-            password:Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
-            conform_password:Joi.ref('password'),
+            password:Joi.string().required(),
+            confirm_password:Joi.ref('password'),
             phone:Joi.string().min(10).max(14).required(),
-            department:Joi.string().required(),
+            department:Joi.number().integer().required(),
             role:Joi.string().optional(),
             status:Joi.boolean().optional(),
 
@@ -27,6 +29,8 @@ const registerController={
       
 
         const {error} = registerSchema.validate(req.body);
+
+        console.log("erro",error)
        
 
         if(error){

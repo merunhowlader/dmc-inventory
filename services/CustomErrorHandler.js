@@ -6,7 +6,7 @@ class CustomErrorHandler extends Error{
         this.message=msg;
 
     }
-    static alreadyExist(message){
+    static alreadyExist(message="already exists"){
         return new CustomErrorHandler(409,message);
 
 
@@ -24,6 +24,11 @@ class CustomErrorHandler extends Error{
 
     static notFound(message="404 not found"){
         return new CustomErrorHandler(404,message);
+
+
+    }
+    static unAuthorized(message="unAuthorized"){
+        return new CustomErrorHandler(401,message);
 
 
     }

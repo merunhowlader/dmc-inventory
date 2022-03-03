@@ -1,9 +1,12 @@
 import express from 'express';
 const router = express.Router();
-import {registerController,loginController,userController,refreshController, transactionController} from '../controllers';
+import {registerController,loginController,userController,refreshController} from '../controllers';
 import auth from '../middlewares/auth';
 import productRoute from './productRoute';
-import transactionRoute from './transactionRoute';
+import operationRoute from './operationRoute';
+import locationRoute from './locationRoute';
+
+import reportRoute from './reportRoute';
 
 router.post('/register',registerController.register);
 
@@ -17,7 +20,10 @@ router.post('/logout',auth,loginController.logout);
 
 router.use('/product/',productRoute);
 
-router.use('/transaction/ict',transactionRoute);
+router.use('/operation',operationRoute);
+
+router.use('/location',locationRoute);
+router.use('/report',reportRoute);
 
 export default router;
 

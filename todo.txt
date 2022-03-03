@@ -1,3 +1,15 @@
 login
 registerUser
 multiple store transaction record
+
+////////////////////////////////
+
+product count type 
+
+1=serialise product 
+
+2=batch product 
+
+3 =no serialised
+
+//send serial and batch from track_number arrya in items
