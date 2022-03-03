@@ -1,7 +1,7 @@
 
 module.exports = (sequelize, DataTypes) => {
 
-    const StockOpration = sequelize.define('stockOperation',{
+    const StockOperation = sequelize.define('stockOperation',{
         operation_Id:{
             type:DataTypes.INTEGER,
             primaryKey:true,
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
             timestamps:true,
         });
     
-    return StockOpration;
+    return StockOperation;
     };
     
     

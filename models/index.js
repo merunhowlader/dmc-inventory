@@ -22,7 +22,7 @@ db.sequelize = sequelize;
 db.User = require("./user.js")(sequelize, Sequelize);
 db.RefreshToken = require("./refreshToken.js")(sequelize, Sequelize);
 db.Product = require("./product.js")(sequelize, Sequelize);
-db.StockOpration = require("./stockOperation.js")(sequelize, Sequelize);
+db.StockOperation = require("./stockOperation.js")(sequelize, Sequelize);
 db.Location = require("./location.js")(sequelize, Sequelize);
 db.Inventory = require("./inventory.js")(sequelize, Sequelize);
 db.Category = require("./category.js")(sequelize, Sequelize);
@@ -43,8 +43,8 @@ db.OperationTrackRecord=require("./operationTrackRecord")(sequelize,Sequelize);
 //related operation 
 db.RelatedOperation=require("./relatedOperation")(sequelize,Sequelize);
 
-db.RelatedOperation.belongsTo(db.StockOpration, {foreignKey:'act_id',as: 'act',constraints: false});
-db.RelatedOperation.belongsTo(db.StockOpration, {foreignKey:'react_id',as: 'react',constraints: false});
+db.RelatedOperation.belongsTo(db.StockOperation, {foreignKey:'act_id',as: 'act',constraints: false});
+db.RelatedOperation.belongsTo(db.StockOperation, {foreignKey:'react_id',as: 'react',constraints: false});
 //product expration relation
 
 db.ProductBatch.hasMany(db.ProductExperation,{foreignKey:'track_id', targetKey:'track_id',constraints: false,scope:{table_name:'productBatch'}});
@@ -69,8 +69,8 @@ db.StockOperationItem.belongsTo(db.Product,{foreignKey: 'product_id',  constrain
 
 
 
-db.StockOpration.hasMany(db.StockOperationItem,{foreignKey:'stockOperationId',constraints: false});
-db.StockOperationItem.belongsTo(db.StockOpration,{foreignKey:'stockOperationId',constraints: false});
+db.StockOperation.hasMany(db.StockOperationItem,{foreignKey:'stockOperationId',constraints: false});
+db.StockOperationItem.belongsTo(db.StockOperation,{foreignKey:'stockOperationId',constraints: false});
 
 
 db.StockOperationItem.hasMany(db.OperationTrackRecord,{foreignKey:'item_operation_id',constraints: false});
@@ -78,17 +78,17 @@ db.OperationTrackRecord.belongsTo(db.StockOperationItem,{foreignKey:'item_operat
 
 
 
- //db.Location.hasMany(db.StockOpration,{foreignKey:'from',as:'from_location',constraints: false});
- // db.Location.hasMany(db.StockOpration,{foreignKey:'to',as:'to_location',constraints: false});
-// db.StockOpration.belongsTo(db.Location,{foreignKey:{name:'from',allowNull:false}});
+ //db.Location.hasMany(db.StockOperation,{foreignKey:'from',as:'from_location',constraints: false});
+ // db.Location.hasMany(db.StockOperation,{foreignKey:'to',as:'to_location',constraints: false});
+// db.StockOperation.belongsTo(db.Location,{foreignKey:{name:'from',allowNull:false}});
  
 
-//  db.StockOpration.belongsTo(db.Location,{foreignKey:'location_id',as:'auron',constraints: false});
-//  db.StockOpration.belongsTo(db.Location,{foreignKey:'location_id',as:'merun',constraints: false});
+//  db.StockOperation.belongsTo(db.Location,{foreignKey:'location_id',as:'auron',constraints: false});
+//  db.StockOperation.belongsTo(db.Location,{foreignKey:'location_id',as:'merun',constraints: false});
 
 
- db.StockOpration.belongsTo(db.Location, {foreignKey:'from',as: 'From',constraints: false});
- db.StockOpration.belongsTo(db.Location, {foreignKey:'to',as: 'To',constraints: false});
+ db.StockOperation.belongsTo(db.Location, {foreignKey:'from',as: 'From',constraints: false});
+ db.StockOperation.belongsTo(db.Location, {foreignKey:'to',as: 'To',constraints: false});
 
 db.Product.hasOne(db.ProductAttribute,{foreignKey: 'product_id',  constraints: false})
 db.ProductAttribute.belongsTo(db.Product,{foreignKey: 'product_id',  constraints: false});
